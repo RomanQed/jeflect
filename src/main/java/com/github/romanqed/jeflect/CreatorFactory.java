@@ -10,11 +10,11 @@ import java.util.function.Consumer;
 import static com.github.romanqed.jeflect.Constants.VOID;
 
 class CreatorFactory {
-    Consumer<MethodVisitor> createConstructor(boolean isStatic, Type type) {
+    Consumer<MethodVisitor> createConstructor(String proxy, boolean isStatic, Type type) {
         if (isStatic) {
             return new StaticConstructorCreator();
         }
-        return new VirtualConstructorCreator(type.getInternalName(), type.getDescriptor());
+        return new VirtualConstructorCreator(proxy, type.getDescriptor());
     }
 
     Consumer<MethodVisitor> createMethod(String proxy, Class<?> clazz, Method method) {

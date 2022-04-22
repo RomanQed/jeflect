@@ -56,7 +56,7 @@ public final class LambdaFactory {
             ret.visitField(FIELD_ACCESS, FIELD_NAME, classType.getDescriptor(), null, null).visitEnd();
         }
         String descriptor = String.format("(%s)V", (isStatic ? "" : classType.getDescriptor()));
-        Consumer<MethodVisitor> constructor = FACTORY.createConstructor(isStatic, classType);
+        Consumer<MethodVisitor> constructor = FACTORY.createConstructor(name, isStatic, classType);
         Consumer<MethodVisitor> methodCreator = FACTORY.createMethod(name, owner, method);
         ProxyCreator creator = new ProxyCreator(descriptor, constructor, methodCreator);
         creator.accept(ret);
