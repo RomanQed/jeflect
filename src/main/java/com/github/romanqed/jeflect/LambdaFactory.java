@@ -18,14 +18,18 @@ import static com.github.romanqed.jeflect.Constants.*;
 
 public final class LambdaFactory {
     private static final CreatorFactory FACTORY = new CreatorFactory();
+    private static final Map<Class<?>, Class<?>> VIRTUALS;
+    private static final Map<Class<?>, Class<?>> STATICS;
+
+    static {
+        VIRTUALS = new ConcurrentHashMap<>();
+        STATICS = new ConcurrentHashMap<>();
+    }
+
     private final Definer definer;
-    private final Map<Class<?>, Class<?>> virtuals;
-    private final Map<Class<?>, Class<?>> statics;
 
     public LambdaFactory(Definer definer) {
         this.definer = Objects.requireNonNull(definer);
-        virtuals = new ConcurrentHashMap<>();
-        statics = new ConcurrentHashMap<>();
     }
 
     public LambdaFactory() {
@@ -34,15 +38,15 @@ public final class LambdaFactory {
 
     private Class<?> findClass(Class<?> owner, Method method) {
         boolean isStatic = Modifier.isStatic(method.getModifiers());
-        Class<?> ret = isStatic ? statics.get(owner) : virtuals.get(owner);
+        Class<?> ret = isStatic ? STATICS.get(owner) : VIRTUALS.get(owner);
         if (ret != null) {
             return ret;
         }
         ret = createClass(owner, method, isStatic);
         if (isStatic) {
-            statics.put(owner, ret);
+            STATICS.put(owner, ret);
         } else {
-            virtuals.put(owner, ret);
+            VIRTUALS.put(owner, ret);
         }
         return ret;
     }

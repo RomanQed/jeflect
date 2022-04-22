@@ -2,7 +2,7 @@ package com.github.romanqed.jeflect;
 
 import org.objectweb.asm.Opcodes;
 
-class Constants {
+final class Constants {
     static final String INIT = "<init>";
     static final String METHOD = "call";
     static final String METHOD_DESCRIPTOR = "([Ljava/lang/Object;)Ljava/lang/Object;";
