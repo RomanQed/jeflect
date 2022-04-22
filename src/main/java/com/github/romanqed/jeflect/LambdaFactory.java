@@ -10,21 +10,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 import static com.github.romanqed.jeflect.Constants.*;
 
 public final class LambdaFactory {
-    private static final Definer DEFINER = new DefineClassLoader();
     private static final CreatorFactory FACTORY = new CreatorFactory();
-
+    private final Definer definer;
     private final Map<Class<?>, Class<?>> virtuals;
     private final Map<Class<?>, Class<?>> statics;
 
-    public LambdaFactory() {
+    public LambdaFactory(Definer definer) {
+        this.definer = Objects.requireNonNull(definer);
         virtuals = new ConcurrentHashMap<>();
         statics = new ConcurrentHashMap<>();
+    }
+
+    public LambdaFactory() {
+        this(new DefineClassLoader());
     }
 
     private Class<?> findClass(Class<?> owner, Method method) {
@@ -57,7 +62,7 @@ public final class LambdaFactory {
         creator.accept(ret);
         ret.visitEnd();
         byte[] bytes = ret.toByteArray();
-        return DEFINER.define(name, bytes);
+        return definer.define(name, bytes);
     }
 
     public <T> Lambda packMethod(Class<T> owner, Method method, T bind) throws
