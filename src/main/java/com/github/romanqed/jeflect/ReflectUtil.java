@@ -78,7 +78,7 @@ public class ReflectUtil {
      * @throws InstantiationException    if the proxy could not be created
      * @throws IllegalAccessException    if the proxy could not be accessed
      */
-    public static <T> Lambda packMethod(Method method, T bind) throws
+    public static Lambda packMethod(Method method, Object bind) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         return LAMBDA_FACTORY.packMethod(method, bind);
     }
