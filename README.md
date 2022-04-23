@@ -8,9 +8,10 @@ To install it, you will need:
 * any build of the JDK no older than version 8
 * Maven/Gradle
 
-### Why do I need it?
-* Jeflect provides a simple and convenient set of utilities for interacting with reflection and speeding it up.
-* Using meta-lambdas and dynamic proxy generation allows you to make calls almost as fast as in user code.
+### Features
+* Getting values from annotations
+* Packaging methods using a proxy
+* Packaging methods with meta-lambdas
 
 ## Installing
 
@@ -35,7 +36,42 @@ dependencies {
 ## Examples
 ### Packaging of the method using meta-lambdas
 ```Java
+import com.github.romanqed.jeflect.ReflectUtil;
 
+import java.util.concurrent.Callable;
+
+public class Main {
+    public static void main(String[] args) throws Throwable {
+        Callable<String> packed = ReflectUtil.packCallable(ToPack.class.getMethod("packMe"), new ToPack());
+        System.out.println(packed.call());
+    }
+
+    public static class ToPack {
+        public String packMe() {
+            return "Hello, I'm packed!";
+        }
+    }
+}
+
+```
+
+### Packaging of the method using proxy
+```Java
+import com.github.romanqed.jeflect.Lambda;
+import com.github.romanqed.jeflect.ReflectUtil;
+
+public class Main {
+    public static void main(String[] args) throws Throwable {
+        Lambda packed = ReflectUtil.packMethod(ToPack.class.getMethod("packMe"), new ToPack());
+        System.out.println(packed.call(new Object[0]));
+    }
+
+    public static class ToPack {
+        public String packMe() {
+            return "Hello, I'm packed!";
+        }
+    }
+}
 ```
 
 ## Built With
