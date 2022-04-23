@@ -99,17 +99,35 @@ public class CorrectTest extends Assertions {
         Lambda lDouble = ReflectUtil.packMethod(dbl);
         Lambda lArray = ReflectUtil.packMethod(arr);
         // Test
-        String[] array = new String[] {"a", "b", "c"};
+        String[] array = new String[]{"a", "b", "c"};
         assertAll(
-                () -> assertEquals(lBool.call(new Object[] {Boolean.FALSE}), Boolean.FALSE),
-                () -> assertEquals(lChar.call(new Object[] {'.'}), '.'),
-                () -> assertEquals(lByte.call(new Object[] {Byte.MIN_VALUE}), Byte.MIN_VALUE),
-                () -> assertEquals(lShort.call(new Object[] {Short.MIN_VALUE}), Short.MIN_VALUE),
-                () -> assertEquals(lInt.call(new Object[] {Integer.MIN_VALUE}), Integer.MIN_VALUE),
-                () -> assertEquals(lFloat.call(new Object[] {Float.MIN_VALUE}), Float.MIN_VALUE),
-                () -> assertEquals(lLong.call(new Object[] {Long.MIN_VALUE}), Long.MIN_VALUE),
-                () -> assertEquals(lDouble.call(new Object[] {Double.MIN_VALUE}), Double.MIN_VALUE),
-                () -> assertEquals(lArray.call(new Object[] {array}), array)
+                () -> assertEquals(lBool.call(new Object[]{Boolean.FALSE}), Boolean.FALSE),
+                () -> assertEquals(lChar.call(new Object[]{'.'}), '.'),
+                () -> assertEquals(lByte.call(new Object[]{Byte.MIN_VALUE}), Byte.MIN_VALUE),
+                () -> assertEquals(lShort.call(new Object[]{Short.MIN_VALUE}), Short.MIN_VALUE),
+                () -> assertEquals(lInt.call(new Object[]{Integer.MIN_VALUE}), Integer.MIN_VALUE),
+                () -> assertEquals(lFloat.call(new Object[]{Float.MIN_VALUE}), Float.MIN_VALUE),
+                () -> assertEquals(lLong.call(new Object[]{Long.MIN_VALUE}), Long.MIN_VALUE),
+                () -> assertEquals(lDouble.call(new Object[]{Double.MIN_VALUE}), Double.MIN_VALUE),
+                () -> assertEquals(lArray.call(new Object[]{array}), array)
+        );
+    }
+
+    @Test
+    public void testPairs() throws Throwable {
+        Pairs p = new Pairs(10);
+        Method oneM = Pairs.class.getDeclaredMethod("one", String.class, Character[].class);
+        Method twoM = Pairs.class.getDeclaredMethod("two", int.class, Integer.class);
+        Method threeM = Pairs.class.getDeclaredMethod("three", String.class, char.class);
+        // Pack
+        Lambda one = ReflectUtil.packMethod(oneM);
+        Lambda two = ReflectUtil.packMethod(twoM, p);
+        Lambda three = ReflectUtil.packMethod(threeM);
+        // Test
+        assertAll(
+                () -> assertEquals(one.call(new Object[]{"1", new Character[0]}), 1),
+                () -> assertEquals(two.call(new Object[]{5, 6}), 21),
+                () -> assertEquals(three.call(new Object[]{"messag", 'e'}), "message")
         );
     }
 
@@ -123,6 +141,26 @@ public class CorrectTest extends Assertions {
         }
 
         int vm();
+    }
+
+    public static class Pairs {
+        private final int add;
+
+        public Pairs(int add) {
+            this.add = add;
+        }
+
+        public static int one(String str, Character[] chars) {
+            return str.length() + chars.length;
+        }
+
+        public static String three(String message, char sym) {
+            return message + sym;
+        }
+
+        public int two(int left, Integer right) {
+            return left + right + add;
+        }
     }
 
     public static class Common {
