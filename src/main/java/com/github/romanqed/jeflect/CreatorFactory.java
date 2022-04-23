@@ -7,8 +7,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Consumer;
 
-import static com.github.romanqed.jeflect.Constants.VOID;
-
 class CreatorFactory {
     Consumer<MethodVisitor> createConstructor(String proxy, boolean isStatic, Type type) {
         if (isStatic) {
@@ -24,7 +22,7 @@ class CreatorFactory {
         MethodData methodData = new MethodData(
                 Type.getType(method),
                 method.getName(),
-                method.getReturnType() != VOID);
+                Type.getType(method.getReturnType()));
         if (isStatic) {
             return new StaticMethodCreator(type, isInterface, methodData);
         }

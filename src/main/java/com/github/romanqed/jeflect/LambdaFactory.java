@@ -16,6 +16,9 @@ import java.util.function.Consumer;
 
 import static com.github.romanqed.jeflect.Constants.*;
 
+/**
+ *
+ */
 public final class LambdaFactory {
     private static final CreatorFactory FACTORY = new CreatorFactory();
     private static final Map<Long, Class<?>> VIRTUALS;
@@ -42,9 +45,13 @@ public final class LambdaFactory {
 
     private void checkMethod(Method method, boolean isStatic) {
         int modifiers = method.getModifiers();
-        // Check for accessibility
+        // Check for class accessibility
+        if (!Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
+            throw new IllegalArgumentException("The class must be public");
+        }
+        // Check for method accessibility
         if (!Modifier.isPublic(modifiers)) {
-            throw new IllegalArgumentException("It is impossible to package a non-public method");
+            throw new IllegalArgumentException("The method must be public");
         }
         // Check for static state
         if (Modifier.isStatic(modifiers) != isStatic) {
@@ -88,6 +95,15 @@ public final class LambdaFactory {
         return definer.define(name, bytes);
     }
 
+    /**
+     * @param method
+     * @param bind
+     * @param <T>
+     * @return
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public <T> Lambda packMethod(Method method, T bind) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         Objects.requireNonNull(method);
@@ -98,6 +114,13 @@ public final class LambdaFactory {
         return (Lambda) constructor.newInstance(bind);
     }
 
+    /**
+     * @param method
+     * @return
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public Lambda packMethod(Method method) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         Objects.requireNonNull(method);

@@ -5,12 +5,12 @@ import org.objectweb.asm.Type;
 class MethodData {
     final Type method;
     final String methodName;
-    final boolean hasReturn;
+    final Type returnType;
 
-    MethodData(Type method, String methodName, boolean hasReturn) {
+    MethodData(Type method, String methodName, Type returnType) {
         this.method = method;
         this.methodName = methodName;
-        this.hasReturn = hasReturn;
+        this.returnType = returnType;
     }
 
     Type[] getArguments() {
