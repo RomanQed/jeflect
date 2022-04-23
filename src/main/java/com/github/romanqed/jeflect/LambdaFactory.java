@@ -40,7 +40,20 @@ public final class LambdaFactory {
         return left > right ? (right | (long) left << 32) : (left | (long) right << 32);
     }
 
-    private Class<?> findClass(Class<?> owner, Method method) {
+    private void checkMethod(Method method, boolean isStatic) {
+        int modifiers = method.getModifiers();
+        // Check for accessibility
+        if (!Modifier.isPublic(modifiers)) {
+            throw new IllegalArgumentException("It is impossible to package a non-public method");
+        }
+        // Check for static state
+        if (Modifier.isStatic(modifiers) != isStatic) {
+            throw new IllegalArgumentException("Invalid method");
+        }
+    }
+
+    private Class<?> findClass(Method method) {
+        Class<?> owner = method.getDeclaringClass();
         long hash = combineHashes(owner.hashCode(), method.hashCode());
         boolean isStatic = Modifier.isStatic(method.getModifiers());
         Class<?> ret = isStatic ? STATICS.get(hash) : VIRTUALS.get(hash);
@@ -75,21 +88,22 @@ public final class LambdaFactory {
         return definer.define(name, bytes);
     }
 
-    public <T> Lambda packMethod(Class<T> owner, Method method, T bind) throws
+    public <T> Lambda packMethod(Method method, T bind) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
-        if (!Modifier.isStatic(method.getModifiers()) && bind == null) {
-            throw new IllegalArgumentException("Missing bind object for virtual method");
-        }
-        Class<?> found = findClass(owner, method);
+        Objects.requireNonNull(method);
+        checkMethod(method, false);
+        Objects.requireNonNull(bind);
+        Class<?> found = findClass(method);
         Constructor<?> constructor = found.getDeclaredConstructors()[0];
-        if (bind != null) {
-            return (Lambda) constructor.newInstance(bind);
-        }
-        return (Lambda) constructor.newInstance();
+        return (Lambda) constructor.newInstance(bind);
     }
 
-    public Lambda packMethod(Class<?> owner, Method method) throws
+    public Lambda packMethod(Method method) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
-        return packMethod(owner, method, null);
+        Objects.requireNonNull(method);
+        checkMethod(method, true);
+        Class<?> found = findClass(method);
+        Constructor<?> constructor = found.getDeclaredConstructors()[0];
+        return (Lambda) constructor.newInstance();
     }
 }
