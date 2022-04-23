@@ -116,7 +116,7 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public <T> T packLambdaHandle(LambdaClass<T> clazz, MethodHandle handle, Object bind) throws Throwable {
+    public static <T> T packLambdaHandle(LambdaClass<T> clazz, MethodHandle handle, Object bind) throws Throwable {
         return META_FACTORY.packLambdaHandle(clazz, handle, bind);
     }
 
@@ -131,7 +131,7 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public <T> T packLambdaMethod(LambdaClass<T> clazz, Method method, Object bind) throws Throwable {
+    public static <T> T packLambdaMethod(LambdaClass<T> clazz, Method method, Object bind) throws Throwable {
         return META_FACTORY.packLambdaMethod(clazz, method, bind);
     }
 
@@ -144,7 +144,7 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public <T> T packLambdaConstructor(LambdaClass<T> clazz, Constructor<?> constructor) throws Throwable {
+    public static <T> T packLambdaConstructor(LambdaClass<T> clazz, Constructor<?> constructor) throws Throwable {
         return META_FACTORY.packLambdaConstructor(clazz, constructor);
     }
 
@@ -157,37 +157,37 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public <T> T packLambdaMethod(LambdaClass<T> clazz, Method method) throws Throwable {
+    public static <T> T packLambdaMethod(LambdaClass<T> clazz, Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(clazz, method);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Consumer<T> packConsumer(Method method, Object bind) throws Throwable {
+    public static <T> Consumer<T> packConsumer(Method method, Object bind) throws Throwable {
         return META_FACTORY.packLambdaMethod(CONSUMER, method, bind);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Consumer<T> packConsumer(Method method) throws Throwable {
+    public static <T> Consumer<T> packConsumer(Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(CONSUMER, method, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <T, R> Function<T, R> packFunction(Method method, Object bind) throws Throwable {
+    public static <T, R> Function<T, R> packFunction(Method method, Object bind) throws Throwable {
         return META_FACTORY.packLambdaMethod(FUNCTION, method, bind);
     }
 
     @SuppressWarnings("unchecked")
-    public <T, R> Function<T, R> packFunction(Method method) throws Throwable {
+    public static <T, R> Function<T, R> packFunction(Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(FUNCTION, method, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <R> Callable<R> packCallable(Method method, Object bind) throws Throwable {
+    public static <R> Callable<R> packCallable(Method method, Object bind) throws Throwable {
         return META_FACTORY.packLambdaMethod(CALLABLE, method, bind);
     }
 
     @SuppressWarnings("unchecked")
-    public <R> Callable<R> packCallable(Method method) throws Throwable {
+    public static <R> Callable<R> packCallable(Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(CALLABLE, method, null);
     }
 }

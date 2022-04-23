@@ -3,6 +3,7 @@ import com.github.romanqed.jeflect.ReflectUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 public class CorrectTest extends Assertions {
@@ -131,6 +132,15 @@ public class CorrectTest extends Assertions {
         );
     }
 
+    @Test
+    public void testException() throws Throwable {
+        Method method = ExceptClass.class.getDeclaredMethod("throwsException");
+        // Pack
+        Lambda except = ReflectUtil.packMethod(method);
+        // Test
+        assertThrows(IOException.class, () -> except.call(new Object[0]));
+    }
+
     public interface Interface {
         static int sm() {
             return CorrectTest.I_S;
@@ -141,6 +151,13 @@ public class CorrectTest extends Assertions {
         }
 
         int vm();
+    }
+
+    public static class ExceptClass {
+        public static void throwsException() throws IOException {
+            // Oh no, EXCEPTION!
+            throw new IOException();
+        }
     }
 
     public static class Pairs {
