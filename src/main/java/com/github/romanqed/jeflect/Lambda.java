@@ -11,6 +11,7 @@ public interface Lambda {
      *
      * @param arguments A set of arguments that will be passed to the method as input.
      * @return the value that the target method will return
+     * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     Object call(Object[] arguments) throws Throwable;
 }

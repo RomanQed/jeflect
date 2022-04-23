@@ -17,7 +17,10 @@ import java.util.function.Consumer;
 import static com.github.romanqed.jeflect.Constants.*;
 
 /**
- *
+ * <p>A class describing a factory that packages methods with any signature into a general-looking lambda interface.</p>
+ * <h3>Does not support methods with varargs!</h3>
+ * <p>However, calls to target methods can be made a little slower,</p>
+ * <p>since copying arguments on the stack and possible packing/unpacking are inevitable.</p>
  */
 public final class LambdaFactory {
     private static final CreatorFactory FACTORY = new CreatorFactory();
@@ -44,6 +47,10 @@ public final class LambdaFactory {
     }
 
     private void checkMethod(Method method, boolean isStatic) {
+        // Check if not varargs
+        if (method.isVarArgs()) {
+            throw new IllegalArgumentException("Packaging methods with varargs is not supported");
+        }
         int modifiers = method.getModifiers();
         // Check for class accessibility
         if (!Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
@@ -96,17 +103,21 @@ public final class LambdaFactory {
     }
 
     /**
-     * @param method
-     * @param bind
-     * @param <T>
-     * @return
-     * @throws InvocationTargetException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * Packages the passed virtual method into a {@link Lambda}.
+     *
+     * @param method method for packaging
+     * @param bind   instance of the object to which the packaged method will be bound
+     * @return the object instantiating the {@link Lambda}
+     * @throws InvocationTargetException if an error occurred inside the proxy constructor
+     * @throws InstantiationException    if the proxy could not be created
+     * @throws IllegalAccessException    if the proxy could not be accessed
      */
-    public <T> Lambda packMethod(Method method, T bind) throws
+    public Lambda packMethod(Method method, Object bind) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         Objects.requireNonNull(method);
+        if (!method.getDeclaringClass().isAssignableFrom(bind.getClass())) {
+            throw new IllegalArgumentException("The bind object is not the owner of the method");
+        }
         checkMethod(method, false);
         Objects.requireNonNull(bind);
         Class<?> found = findClass(method);
@@ -115,11 +126,13 @@ public final class LambdaFactory {
     }
 
     /**
-     * @param method
-     * @return
-     * @throws InvocationTargetException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * Packages the passed static method into a {@link Lambda}.
+     *
+     * @param method method for packaging
+     * @return the object instantiating the {@link Lambda}
+     * @throws InvocationTargetException if an error occurred inside the proxy constructor
+     * @throws InstantiationException    if the proxy could not be created
+     * @throws IllegalAccessException    if the proxy could not be accessed
      */
     public Lambda packMethod(Method method) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
