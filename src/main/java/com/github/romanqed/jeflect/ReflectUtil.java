@@ -18,7 +18,7 @@ import java.util.function.Function;
  * A set of utilities for interacting with reflection.
  * Contains static instances of the {@link MetaFactory} and {@link LambdaFactory}
  */
-public class ReflectUtil {
+public final class ReflectUtil {
     @SuppressWarnings("rawtypes")
     public static final LambdaClass<Consumer> CONSUMER = LambdaClass.fromClass(Consumer.class);
     @SuppressWarnings("rawtypes")
