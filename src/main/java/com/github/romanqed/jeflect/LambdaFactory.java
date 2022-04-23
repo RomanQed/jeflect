@@ -18,8 +18,8 @@ import static com.github.romanqed.jeflect.Constants.*;
 
 public final class LambdaFactory {
     private static final CreatorFactory FACTORY = new CreatorFactory();
-    private static final Map<Class<?>, Class<?>> VIRTUALS;
-    private static final Map<Class<?>, Class<?>> STATICS;
+    private static final Map<Long, Class<?>> VIRTUALS;
+    private static final Map<Long, Class<?>> STATICS;
 
     static {
         VIRTUALS = new ConcurrentHashMap<>();
@@ -36,23 +36,29 @@ public final class LambdaFactory {
         this(new DefineClassLoader());
     }
 
+    private long combineHashes(int left, int right) {
+        return left > right ? (right | (long) left << 32) : (left | (long) right << 32);
+    }
+
     private Class<?> findClass(Class<?> owner, Method method) {
+        long hash = combineHashes(owner.hashCode(), method.hashCode());
         boolean isStatic = Modifier.isStatic(method.getModifiers());
-        Class<?> ret = isStatic ? STATICS.get(owner) : VIRTUALS.get(owner);
+        Class<?> ret = isStatic ? STATICS.get(hash) : VIRTUALS.get(hash);
         if (ret != null) {
             return ret;
         }
         ret = createClass(owner, method, isStatic);
         if (isStatic) {
-            STATICS.put(owner, ret);
+            STATICS.put(hash, ret);
         } else {
-            VIRTUALS.put(owner, ret);
+            VIRTUALS.put(hash, ret);
         }
         return ret;
     }
 
     private Class<?> createClass(Class<?> owner, Method method, boolean isStatic) {
-        String name = PROXY + (isStatic ? owner.hashCode() : method.hashCode());
+        long hash = combineHashes(owner.hashCode(), method.hashCode());
+        String name = PROXY + hash;
         ClassWriter ret = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT, INTERFACES);
         Type classType = Type.getType(owner);
