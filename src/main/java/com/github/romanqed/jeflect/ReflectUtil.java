@@ -52,6 +52,14 @@ public class ReflectUtil {
         return LAMBDA_FACTORY.packMethod(method);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <R> Callable<R> packConstructor(Class<R> clazz) throws Throwable {
+        Objects.requireNonNull(clazz);
+        Constructor<R> toPack = clazz.getDeclaredConstructor();
+        MethodHandle handle = META_FACTORY.getLookup().unreflectConstructor(toPack);
+        return META_FACTORY.packLambdaHandle(CALLABLE, handle, null);
+    }
+
     public <T> T packLambdaHandle(LambdaClass<T> clazz, MethodHandle handle, Object bind) throws Throwable {
         return META_FACTORY.packLambdaHandle(clazz, handle, bind);
     }
@@ -66,5 +74,35 @@ public class ReflectUtil {
 
     public <T> T packLambdaMethod(LambdaClass<T> clazz, Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(clazz, method);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Consumer<T> packConsumer(Method method, Object bind) throws Throwable {
+        return META_FACTORY.packLambdaMethod(CONSUMER, method, bind);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Consumer<T> packConsumer(Method method) throws Throwable {
+        return META_FACTORY.packLambdaMethod(CONSUMER, method, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, R> Function<T, R> packFunction(Method method, Object bind) throws Throwable {
+        return META_FACTORY.packLambdaMethod(FUNCTION, method, bind);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T, R> Function<T, R> packFunction(Method method) throws Throwable {
+        return META_FACTORY.packLambdaMethod(FUNCTION, method, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> Callable<R> packCallable(Method method, Object bind) throws Throwable {
+        return META_FACTORY.packLambdaMethod(CALLABLE, method, bind);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> Callable<R> packCallable(Method method) throws Throwable {
+        return META_FACTORY.packLambdaMethod(CALLABLE, method, null);
     }
 }
