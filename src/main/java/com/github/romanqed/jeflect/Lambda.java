@@ -14,4 +14,8 @@ public interface Lambda {
      * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     Object call(Object[] arguments) throws Throwable;
+
+    default Object call() throws Throwable {
+        return call(Constants.EMPTY_ARGUMENTS);
+    }
 }

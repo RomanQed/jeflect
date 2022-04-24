@@ -141,6 +141,15 @@ public class CorrectTest extends Assertions {
         assertThrows(IOException.class, () -> except.call(new Object[0]));
     }
 
+    @Test
+    public void testVarArgs() throws Throwable {
+        Method method = VarArgs.class.getDeclaredMethod("sum", int[].class);
+        // Pack
+        Lambda sum = ReflectUtil.packMethod(method);
+        // Test
+        assertEquals(sum.call(new Object[]{new int[]{1, 2, 3}}), 6);
+    }
+
     public interface Interface {
         static int sm() {
             return CorrectTest.I_S;
@@ -151,6 +160,16 @@ public class CorrectTest extends Assertions {
         }
 
         int vm();
+    }
+
+    public static class VarArgs {
+        public static int sum(int... numbers) {
+            int ret = 0;
+            for (int number : numbers) {
+                ret += number;
+            }
+            return ret;
+        }
     }
 
     public static class ExceptClass {

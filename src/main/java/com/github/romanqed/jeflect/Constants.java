@@ -20,6 +20,7 @@ final class Constants {
     static final String VOID = "V";
     static final Map<String, String> PRIMITIVES;
     static final Map<String, String> PRIMITIVE_METHODS;
+    static final Object[] EMPTY_ARGUMENTS = new Object[0];
 
     static {
         // Init primitives

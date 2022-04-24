@@ -47,10 +47,6 @@ public final class LambdaFactory {
     }
 
     private void checkMethod(Method method, boolean isStatic) {
-        // Check if not varargs
-        if (method.isVarArgs()) {
-            throw new IllegalArgumentException("Packaging methods with varargs is not supported");
-        }
         int modifiers = method.getModifiers();
         // Check for class accessibility
         if (!Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
@@ -66,10 +62,9 @@ public final class LambdaFactory {
         }
     }
 
-    private Class<?> findClass(Method method) {
+    private Class<?> findClass(Method method, boolean isStatic) {
         Class<?> owner = method.getDeclaringClass();
         long hash = combineHashes(owner.hashCode(), method.hashCode());
-        boolean isStatic = Modifier.isStatic(method.getModifiers());
         Class<?> ret = isStatic ? STATICS.get(hash) : VIRTUALS.get(hash);
         if (ret != null) {
             return ret;
@@ -120,7 +115,7 @@ public final class LambdaFactory {
         }
         checkMethod(method, false);
         Objects.requireNonNull(bind);
-        Class<?> found = findClass(method);
+        Class<?> found = findClass(method, false);
         Constructor<?> constructor = found.getDeclaredConstructors()[0];
         return (Lambda) constructor.newInstance(bind);
     }
@@ -138,7 +133,7 @@ public final class LambdaFactory {
             InvocationTargetException, InstantiationException, IllegalAccessException {
         Objects.requireNonNull(method);
         checkMethod(method, true);
-        Class<?> found = findClass(method);
+        Class<?> found = findClass(method, true);
         Constructor<?> constructor = found.getDeclaredConstructors()[0];
         return (Lambda) constructor.newInstance();
     }
