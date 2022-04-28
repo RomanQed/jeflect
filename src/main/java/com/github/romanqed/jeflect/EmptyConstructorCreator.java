@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import static com.github.romanqed.jeflect.Constants.*;
 
-class StaticConstructorCreator implements Consumer<MethodVisitor> {
+class EmptyConstructorCreator implements Consumer<MethodVisitor> {
     @Override
     public void accept(MethodVisitor visitor) {
         visitor.visitVarInsn(Opcodes.ALOAD, 0);

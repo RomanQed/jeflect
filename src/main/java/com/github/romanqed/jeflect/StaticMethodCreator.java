@@ -4,13 +4,13 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-public class StaticMethodCreator extends CommonMethodCreator {
+class StaticMethodCreator extends CommonMethodCreator {
     private final Type clazz;
     private final MethodData data;
     private final boolean isInterface;
 
-    StaticMethodCreator(Type clazz, boolean isInterface, MethodData data) {
-        super(data.returnType, data.getArguments());
+    StaticMethodCreator(Type clazz, boolean isInterface, MethodData data, int argument) {
+        super(data.returnType, data.getArguments(), argument);
         this.clazz = clazz;
         this.data = data;
         this.isInterface = isInterface;

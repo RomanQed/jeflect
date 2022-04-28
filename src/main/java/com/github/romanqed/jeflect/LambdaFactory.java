@@ -22,79 +22,40 @@ import static com.github.romanqed.jeflect.Constants.*;
  * <p>However, calls to target methods can be made a little slower,</p>
  * <p>since copying arguments on the stack and possible packing/unpacking are inevitable.</p>
  */
-public final class LambdaFactory {
-    private static final CreatorFactory FACTORY = new CreatorFactory();
-    private static final Map<Long, Class<?>> VIRTUALS;
-    private static final Map<Long, Class<?>> STATICS;
+public final class LambdaFactory extends PackFactory {
+    private static final LambdaCreatorFactory FACTORY = new LambdaCreatorFactory();
+    private static final Map<Long, Class<?>> VIRTUALS = new ConcurrentHashMap<>();
+    private static final Map<Long, Class<?>> STATICS = new ConcurrentHashMap<>();
 
-    static {
-        VIRTUALS = new ConcurrentHashMap<>();
-        STATICS = new ConcurrentHashMap<>();
-    }
-
-    private final Definer definer;
-
-    public LambdaFactory(Definer definer) {
-        this.definer = Objects.requireNonNull(definer);
+    public LambdaFactory(DefineLoader loader) {
+        super(VIRTUALS, STATICS, loader);
     }
 
     public LambdaFactory() {
-        this(new DefineClassLoader());
+        super(VIRTUALS, STATICS, new DefineClassLoader());
     }
 
-    private long combineHashes(int left, int right) {
-        return left > right ? (right | (long) left << 32) : (left | (long) right << 32);
-    }
-
-    private void checkMethod(Method method, boolean isStatic) {
-        int modifiers = method.getModifiers();
-        // Check for class accessibility
-        if (!Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
-            throw new IllegalArgumentException("The class must be public");
-        }
-        // Check for method accessibility
-        if (!Modifier.isPublic(modifiers)) {
-            throw new IllegalArgumentException("The method must be public");
-        }
-        // Check for static state
-        if (Modifier.isStatic(modifiers) != isStatic) {
-            throw new IllegalArgumentException("Invalid method");
-        }
-    }
-
-    private Class<?> findClass(Method method, boolean isStatic) {
-        Class<?> owner = method.getDeclaringClass();
-        long hash = combineHashes(owner.hashCode(), method.hashCode());
-        Class<?> ret = isStatic ? STATICS.get(hash) : VIRTUALS.get(hash);
-        if (ret != null) {
-            return ret;
-        }
-        ret = createClass(owner, method, isStatic);
-        if (isStatic) {
-            STATICS.put(hash, ret);
-        } else {
-            VIRTUALS.put(hash, ret);
-        }
-        return ret;
-    }
-
-    private Class<?> createClass(Class<?> owner, Method method, boolean isStatic) {
-        long hash = combineHashes(owner.hashCode(), method.hashCode());
-        String name = PROXY + hash;
+    protected byte[] createClass(String name, Class<?> owner, Method method, boolean isStatic) {
         ClassWriter ret = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT, INTERFACES);
+        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT, new String[]{LAMBDA});
         Type classType = Type.getType(owner);
         if (!isStatic) {
             ret.visitField(FIELD_ACCESS, FIELD_NAME, classType.getDescriptor(), null, null).visitEnd();
         }
-        String descriptor = String.format("(%s)V", (isStatic ? "" : classType.getDescriptor()));
+        String descriptor = formatDescriptor("V", isStatic ? "" : classType.getDescriptor());
         Consumer<MethodVisitor> constructor = FACTORY.createConstructor(name, isStatic, classType);
         Consumer<MethodVisitor> methodCreator = FACTORY.createMethod(name, owner, method);
-        ProxyCreator creator = new ProxyCreator(descriptor, constructor, methodCreator);
+        LambdaCreator creator = new LambdaCreator(descriptor, constructor, methodCreator);
         creator.accept(ret);
         ret.visitEnd();
-        byte[] bytes = ret.toByteArray();
-        return definer.define(name, bytes);
+        return ret.toByteArray();
+    }
+
+    private void checkMethod(Method method, boolean isStatic) {
+        super.checkMethod(method);
+        if (Modifier.isStatic(method.getModifiers()) != isStatic) {
+            throw new IllegalArgumentException("Invalid method");
+        }
     }
 
     /**

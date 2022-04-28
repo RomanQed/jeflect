@@ -4,13 +4,17 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-class VirtualMethodCreator extends CommonMethodCreator {
+import static com.github.romanqed.jeflect.Constants.FIELD_NAME;
+
+class VirtualBoundMethodCreator extends CommonMethodCreator {
+    private final String name;
     private final Type clazz;
     private final MethodData data;
     private final boolean isInterface;
 
-    VirtualMethodCreator(Type clazz, boolean isInterface, MethodData data) {
-        super(data.returnType, data.getArguments(), 2);
+    VirtualBoundMethodCreator(String name, Type clazz, boolean isInterface, MethodData data) {
+        super(data.returnType, data.getArguments(), 1);
+        this.name = name;
         this.clazz = clazz;
         this.data = data;
         this.isInterface = isInterface;
@@ -18,10 +22,9 @@ class VirtualMethodCreator extends CommonMethodCreator {
 
     @Override
     public void accept(MethodVisitor visitor) {
-        // Load object from arguments
-        visitor.visitVarInsn(Opcodes.ALOAD, 1);
-        // Cast to bound type
-        visitor.visitTypeInsn(Opcodes.CHECKCAST, clazz.getInternalName());
+        // Load body field to invoke virtual method from it
+        visitor.visitVarInsn(Opcodes.ALOAD, 0);
+        visitor.visitFieldInsn(Opcodes.GETFIELD, name, FIELD_NAME, clazz.getDescriptor());
         // Create arguments
         createArguments(visitor);
         // Invoke method

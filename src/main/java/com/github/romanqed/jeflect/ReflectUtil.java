@@ -1,7 +1,7 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.lambdas.LambdaClass;
-import com.github.romanqed.jeflect.lambdas.MetaFactory;
+import com.github.romanqed.jeflect.meta.LambdaClass;
+import com.github.romanqed.jeflect.meta.MetaFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;

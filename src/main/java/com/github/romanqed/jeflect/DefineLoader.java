@@ -3,7 +3,7 @@ package com.github.romanqed.jeflect;
 /**
  * An interface describing the mechanism that loads a class into memory.
  */
-public interface Definer {
+public interface DefineLoader {
     /**
      * Defines a class in memory and returns its instance
      *

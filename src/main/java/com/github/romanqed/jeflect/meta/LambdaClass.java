@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.lambdas;
+package com.github.romanqed.jeflect.meta;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

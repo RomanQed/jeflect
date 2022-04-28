@@ -7,15 +7,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Consumer;
 
-class CreatorFactory {
-    Consumer<MethodVisitor> createConstructor(String proxy, boolean isStatic, Type type) {
-        if (isStatic) {
-            return new StaticConstructorCreator();
-        }
-        return new VirtualConstructorCreator(proxy, type.getDescriptor());
-    }
-
-    Consumer<MethodVisitor> createMethod(String proxy, Class<?> clazz, Method method) {
+public class MethodCreatorFactory {
+    public Consumer<MethodVisitor> createMethod(Class<?> clazz, Method method) {
         boolean isStatic = Modifier.isStatic(method.getModifiers());
         Type type = Type.getType(clazz);
         boolean isInterface = clazz.isInterface();
@@ -24,8 +17,8 @@ class CreatorFactory {
                 method.getName(),
                 Type.getType(method.getReturnType()));
         if (isStatic) {
-            return new StaticMethodCreator(type, isInterface, methodData);
+            return new StaticMethodCreator(type, isInterface, methodData, 2);
         }
-        return new VirtualMethodCreator(proxy, type, isInterface, methodData);
+        return new VirtualMethodCreator(type, isInterface, methodData);
     }
 }

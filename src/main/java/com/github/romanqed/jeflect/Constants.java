@@ -1,6 +1,7 @@
 package com.github.romanqed.jeflect;
 
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,41 +10,46 @@ import java.util.Map;
 final class Constants {
     static final String INIT = "<init>";
     static final String METHOD = "call";
-    static final String METHOD_DESCRIPTOR = "([Ljava/lang/Object;)Ljava/lang/Object;";
+    static final String DESCRIPTOR = "(%s)%s";
     static final String EMPTY_DESCRIPTOR = "()V";
     static final String FIELD_NAME = "body";
     static final String OBJECT = "java/lang/Object";
-    static final String LAMBDA = "com/github/romanqed/jeflect/Lambda";
-    static final String[] INTERFACES = {LAMBDA};
+    static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
+    static final String LAMBDA_METHOD = Type.getType(LambdaMethod.class).getInternalName();
     static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
-    static final String PROXY = "Proxy";
     static final String VOID = "V";
-    static final Map<String, String> PRIMITIVES;
-    static final Map<String, String> PRIMITIVE_METHODS;
+    static final Map<String, String> PRIMITIVES = getPrimitives();
+    static final Map<String, String> PRIMITIVE_METHODS = getPrimitiveMethods();
     static final Object[] EMPTY_ARGUMENTS = new Object[0];
+    static final String THROWABLE = "java/lang/Throwable";
 
-    static {
-        // Init primitives
-        Map<String, String> primitives = new HashMap<>();
-        primitives.put("Z", "java/lang/Boolean");
-        primitives.put("C", "java/lang/Character");
-        primitives.put("B", "java/lang/Byte");
-        primitives.put("S", "java/lang/Short");
-        primitives.put("I", "java/lang/Integer");
-        primitives.put("F", "java/lang/Float");
-        primitives.put("J", "java/lang/Long");
-        primitives.put("D", "java/lang/Double");
-        PRIMITIVES = Collections.unmodifiableMap(primitives);
-        // Init primitive methods
-        Map<String, String> primitiveMethods = new HashMap<>();
-        primitiveMethods.put("Z", "booleanValue");
-        primitiveMethods.put("C", "charValue");
-        primitiveMethods.put("B", "byteValue");
-        primitiveMethods.put("S", "shortValue");
-        primitiveMethods.put("I", "intValue");
-        primitiveMethods.put("F", "floatValue");
-        primitiveMethods.put("J", "longValue");
-        primitiveMethods.put("D", "doubleValue");
-        PRIMITIVE_METHODS = Collections.unmodifiableMap(primitiveMethods);
+    private static Map<String, String> getPrimitives() {
+        Map<String, String> ret = new HashMap<>();
+        ret.put("Z", "java/lang/Boolean");
+        ret.put("C", "java/lang/Character");
+        ret.put("B", "java/lang/Byte");
+        ret.put("S", "java/lang/Short");
+        ret.put("I", "java/lang/Integer");
+        ret.put("F", "java/lang/Float");
+        ret.put("J", "java/lang/Long");
+        ret.put("D", "java/lang/Double");
+        return Collections.unmodifiableMap(ret);
+    }
+
+    private static Map<String, String> getPrimitiveMethods() {
+        Map<String, String> ret = new HashMap<>();
+        ret.put("Z", "booleanValue");
+        ret.put("C", "charValue");
+        ret.put("B", "byteValue");
+        ret.put("S", "shortValue");
+        ret.put("I", "intValue");
+        ret.put("F", "floatValue");
+        ret.put("J", "longValue");
+        ret.put("D", "doubleValue");
+        return Collections.unmodifiableMap(ret);
+    }
+
+    static String formatDescriptor(String ret, String arg) {
+        return String.format(DESCRIPTOR, arg, ret);
     }
 }

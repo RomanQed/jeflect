@@ -13,10 +13,12 @@ abstract class CommonMethodCreator implements Consumer<MethodVisitor> {
     private static final String DESCRIPTOR = "(%s)%s";
     private final Type[] arguments;
     private final Type returnType;
+    private final int argument;
 
-    CommonMethodCreator(Type returnType, Type[] arguments) {
+    CommonMethodCreator(Type returnType, Type[] arguments, int argument) {
         this.returnType = returnType;
         this.arguments = arguments;
+        this.argument = argument;
     }
 
     private void castArgument(MethodVisitor visitor, Type argument) {
@@ -38,7 +40,7 @@ abstract class CommonMethodCreator implements Consumer<MethodVisitor> {
 
     protected void createArguments(MethodVisitor visitor) {
         for (int i = 0; i < arguments.length; ++i) {
-            visitor.visitVarInsn(Opcodes.ALOAD, 1);
+            visitor.visitVarInsn(Opcodes.ALOAD, argument);
             if (i < 6) {
                 visitor.visitInsn(INT_0 + i);
             } else {

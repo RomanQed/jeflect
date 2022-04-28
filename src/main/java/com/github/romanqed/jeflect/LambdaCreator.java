@@ -8,15 +8,15 @@ import java.util.function.Consumer;
 
 import static com.github.romanqed.jeflect.Constants.*;
 
-class ProxyCreator implements Consumer<ClassWriter> {
+class LambdaCreator extends CommonCreator {
+    private static final String DESCRIPTOR = formatDescriptor("L" + OBJECT + ";", "[L" + OBJECT + ";");
     private final String descriptor;
     private final Consumer<MethodVisitor> constructor;
-    private final Consumer<MethodVisitor> method;
 
-    ProxyCreator(String descriptor, Consumer<MethodVisitor> constructor, Consumer<MethodVisitor> method) {
+    LambdaCreator(String descriptor, Consumer<MethodVisitor> constructor, Consumer<MethodVisitor> method) {
+        super(DESCRIPTOR, method);
         this.descriptor = descriptor;
         this.constructor = constructor;
-        this.method = method;
     }
 
     @Override
@@ -27,11 +27,6 @@ class ProxyCreator implements Consumer<ClassWriter> {
         constructor.accept(init);
         init.visitMaxs(0, 0);
         init.visitEnd();
-        // Generate method
-        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, METHOD_DESCRIPTOR, null, null);
-        call.visitCode();
-        method.accept(call);
-        call.visitMaxs(0, 0);
-        call.visitEnd();
+        super.accept(writer);
     }
 }

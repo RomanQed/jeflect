@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-public class CorrectTest extends Assertions {
+public class LambdaTest extends Assertions {
     // Interface codes
     static final int I_S = 1;
     static final int I_DV = 2;
@@ -152,11 +152,11 @@ public class CorrectTest extends Assertions {
 
     public interface Interface {
         static int sm() {
-            return CorrectTest.I_S;
+            return LambdaTest.I_S;
         }
 
         default int dm() {
-            return CorrectTest.I_DV;
+            return LambdaTest.I_DV;
         }
 
         int vm();
@@ -240,35 +240,35 @@ public class CorrectTest extends Assertions {
     static class InterfaceImpl implements Interface {
         @Override
         public int vm() {
-            return CorrectTest.I_V;
+            return LambdaTest.I_V;
         }
     }
 
     public static class Class {
         public static int sm() {
-            return CorrectTest.C_S;
+            return LambdaTest.C_S;
         }
 
         public int vm() {
-            return CorrectTest.C_V;
+            return LambdaTest.C_V;
         }
 
         public final int vfm() {
-            return CorrectTest.C_VF;
+            return LambdaTest.C_VF;
         }
     }
 
     public static abstract class AbstractClass {
         public static int sm() {
-            return CorrectTest.AC_S;
+            return LambdaTest.AC_S;
         }
 
         public int vm() {
-            return CorrectTest.AC_V;
+            return LambdaTest.AC_V;
         }
 
         public final int vfm() {
-            return CorrectTest.AC_VF;
+            return LambdaTest.AC_VF;
         }
 
         public abstract int vam();
@@ -278,7 +278,7 @@ public class CorrectTest extends Assertions {
 
         @Override
         public int vam() {
-            return CorrectTest.AC_VA;
+            return LambdaTest.AC_VA;
         }
     }
 }
