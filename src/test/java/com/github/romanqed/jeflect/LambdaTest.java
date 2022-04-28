@@ -1,5 +1,5 @@
-import com.github.romanqed.jeflect.Lambda;
-import com.github.romanqed.jeflect.ReflectUtil;
+package com.github.romanqed.jeflect;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
