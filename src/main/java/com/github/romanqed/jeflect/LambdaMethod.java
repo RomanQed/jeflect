@@ -18,4 +18,15 @@ public interface LambdaMethod extends Lambda {
     default Object call(Object[] arguments) throws Throwable {
         return call(null, arguments);
     }
+
+    /**
+     * Calls the target method without parameters.
+     *
+     * @param object the object of the class that the method belongs to.
+     * @return the value that the target method will return
+     * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
+     */
+    default Object call(Object object) throws Throwable {
+        return call(object, Constants.EMPTY_ARGUMENTS);
+    }
 }

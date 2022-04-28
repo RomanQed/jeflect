@@ -18,8 +18,7 @@ import static com.github.romanqed.jeflect.Constants.*;
 
 /**
  * <p>A class describing a factory that packages methods with any signature into a general-looking lambda interface.</p>
- * <h3>Does not support methods with varargs!</h3>
- * <p>However, calls to target methods can be made a little slower,</p>
+ * <p>Calls to target methods can be made a little slower than meta-lambdas calls,</p>
  * <p>since copying arguments on the stack and possible packing/unpacking are inevitable.</p>
  */
 public final class LambdaFactory extends PackFactory {

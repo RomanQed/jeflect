@@ -26,6 +26,7 @@ public final class ReflectUtil {
     @SuppressWarnings("rawtypes")
     public static final LambdaClass<Callable> CALLABLE = LambdaClass.fromClass(Callable.class);
     private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory();
+    private static final MethodFactory LAMBDA_METHOD_FACTORY = new MethodFactory();
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
 
     /**
@@ -95,6 +96,20 @@ public final class ReflectUtil {
     public static Lambda packMethod(Method method) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         return LAMBDA_FACTORY.packMethod(method);
+    }
+
+    /**
+     * Packages the passed method into a {@link LambdaMethod}.
+     *
+     * @param method method for packaging
+     * @return the object instantiating the {@link LambdaMethod}
+     * @throws InvocationTargetException if an error occurred inside the proxy constructor
+     * @throws InstantiationException    if the proxy could not be created
+     * @throws IllegalAccessException    if the proxy could not be accessed
+     */
+    public static LambdaMethod packLambdaMethod(Method method) throws
+            InvocationTargetException, InstantiationException, IllegalAccessException {
+        return LAMBDA_METHOD_FACTORY.packMethod(method);
     }
 
     @SuppressWarnings("unchecked")

@@ -16,6 +16,11 @@ import java.util.function.Consumer;
 import static com.github.romanqed.jeflect.Constants.LAMBDA_METHOD;
 import static com.github.romanqed.jeflect.Constants.OBJECT;
 
+/**
+ * A class describing a factory that packages methods with any signature into a general-looking LambdaMethod interface.
+ * <p>Calls to target methods can be made a little slower than meta-lambdas calls,</p>
+ * <p>since copying arguments on the stack and possible packing/unpacking are inevitable.</p>
+ */
 public final class MethodFactory extends PackFactory {
     private static final MethodCreatorFactory FACTORY = new MethodCreatorFactory();
     private static final Map<Long, Class<?>> VIRTUALS = new ConcurrentHashMap<>();
@@ -40,6 +45,15 @@ public final class MethodFactory extends PackFactory {
         return ret.toByteArray();
     }
 
+    /**
+     * Packages the passed method into a {@link LambdaMethod}.
+     *
+     * @param method method for packaging
+     * @return the object instantiating the {@link LambdaMethod}
+     * @throws InvocationTargetException if an error occurred inside the proxy constructor
+     * @throws InstantiationException    if the proxy could not be created
+     * @throws IllegalAccessException    if the proxy could not be accessed
+     */
     public LambdaMethod packMethod(Method method) throws
             InvocationTargetException, InstantiationException, IllegalAccessException {
         Objects.requireNonNull(method);
