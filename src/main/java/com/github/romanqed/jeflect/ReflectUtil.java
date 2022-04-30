@@ -42,9 +42,6 @@ public final class ReflectUtil {
             NoSuchMethodException {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Method found = annotationType.getDeclaredMethod(value);
-        if (found.getReturnType() != type) {
-            throw new NoSuchMethodException();
-        }
         try {
             return type.cast(found.invoke(annotation));
         } catch (Exception e) {
