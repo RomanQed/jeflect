@@ -9,7 +9,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,9 +40,6 @@ public final class ReflectUtil {
      */
     public static <T> T extractAnnotationValue(Annotation annotation, String value, Class<T> type) throws
             NoSuchMethodException {
-        Objects.requireNonNull(annotation);
-        Objects.requireNonNull(value);
-        Objects.requireNonNull(type);
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Method found = annotationType.getDeclaredMethod(value);
         if (found.getReturnType() != type) {
@@ -114,7 +110,6 @@ public final class ReflectUtil {
 
     @SuppressWarnings("unchecked")
     public static <R> Callable<R> packConstructor(Class<R> clazz) throws Throwable {
-        Objects.requireNonNull(clazz);
         Constructor<R> toPack = clazz.getDeclaredConstructor();
         MethodHandle handle = META_FACTORY.getLookup().unreflectConstructor(toPack);
         return META_FACTORY.packLambdaHandle(CALLABLE, handle, null);
