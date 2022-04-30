@@ -33,17 +33,17 @@ public final class ReflectUtil {
      *
      * @param annotation annotation object to be extracted from
      * @param value      name of the extracted value
-     * @param type       class of extracted value
      * @param <T>        type of extracted value
      * @return extracted value, or null in case of an error
      * @throws NoSuchMethodException if a value with the specified name was not found
      */
-    public static <T> T extractAnnotationValue(Annotation annotation, String value, Class<T> type) throws
+    @SuppressWarnings("unchecked")
+    public static <T> T extractAnnotationValue(Annotation annotation, String value) throws
             NoSuchMethodException {
         Class<? extends Annotation> annotationType = annotation.annotationType();
         Method found = annotationType.getDeclaredMethod(value);
         try {
-            return type.cast(found.invoke(annotation));
+            return (T) found.invoke(annotation);
         } catch (Exception e) {
             return null;
         }
@@ -53,13 +53,12 @@ public final class ReflectUtil {
      * Extracts the value from the annotation by name "value" using basic reflection tools.
      *
      * @param annotation annotation object to be extracted from
-     * @param type       class of extracted value
      * @param <T>        type of extracted value
      * @return extracted value, or null in case of an error
      * @throws NoSuchMethodException if a value with the specified name was not found
      */
-    public static <T> T extractAnnotationValue(Annotation annotation, Class<T> type) throws NoSuchMethodException {
-        return extractAnnotationValue(annotation, "value", type);
+    public static <T> T extractAnnotationValue(Annotation annotation) throws NoSuchMethodException {
+        return extractAnnotationValue(annotation, "value");
     }
 
     /**
