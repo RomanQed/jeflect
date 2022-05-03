@@ -74,6 +74,45 @@ public class Main {
 }
 ```
 
+### Packaging of the method using custom lambda
+```Java
+import com.github.romanqed.jeflect.ReflectUtil;
+import com.github.romanqed.jeflect.meta.LambdaClass;
+
+public class Main {
+    public static void main(String[] args) throws Throwable {
+        LambdaClass<MyLambda> clazz = LambdaClass.fromClass(MyLambda.class);
+        MyLambda lambda = ReflectUtil.packLambdaMethod(clazz, Main.class.getDeclaredMethod("toPack", int.class), new Main());
+        System.out.println(lambda.increment(0));
+    }
+
+    public int toPack(int number) {
+        return number + 1;
+    }
+
+    public interface MyLambda {
+        int increment(int number);
+    }
+}
+```
+
+### Packaging of the method using LambdaMethod
+```Java
+import com.github.romanqed.jeflect.LambdaMethod;
+import com.github.romanqed.jeflect.ReflectUtil;
+
+public class Main {
+    public static void main(String[] args) throws Throwable {
+        LambdaMethod lambda = ReflectUtil.packLambdaMethod(Main.class.getDeclaredMethod("toPack", int.class));
+        System.out.println(lambda.call(new Main(), new Object[]{0}));
+    }
+
+    public int toPack(int number) {
+        return number + 1;
+    }
+}
+```
+
 ## Built With
 
 * [Gradle](https://gradle.org) - Dependency management
