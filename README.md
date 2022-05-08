@@ -1,4 +1,5 @@
 # jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/)
+
 A set of utilities designed to interact with reflection and speed up it.
 
 ## Getting Started
@@ -9,6 +10,7 @@ To install it, you will need:
 * Maven/Gradle
 
 ### Features
+
 * Getting values from annotations
 * Packaging methods using a proxy
 * Packaging methods with meta-lambdas
@@ -34,7 +36,9 @@ dependencies {
 ```
 
 ## Examples
+
 ### Packaging of the method using meta-lambdas
+
 ```Java
 import com.github.romanqed.jeflect.ReflectUtil;
 
@@ -56,6 +60,7 @@ public class Main {
 ```
 
 ### Packaging of the method using proxy
+
 ```Java
 import com.github.romanqed.jeflect.Lambda;
 import com.github.romanqed.jeflect.ReflectUtil;
@@ -75,6 +80,7 @@ public class Main {
 ```
 
 ### Packaging of the method using custom lambda
+
 ```Java
 import com.github.romanqed.jeflect.ReflectUtil;
 import com.github.romanqed.jeflect.meta.LambdaClass;
@@ -97,6 +103,7 @@ public class Main {
 ```
 
 ### Packaging of the method using LambdaMethod
+
 ```Java
 import com.github.romanqed.jeflect.LambdaMethod;
 import com.github.romanqed.jeflect.ReflectUtil;
@@ -119,6 +126,7 @@ public class Main {
 * [ASM](https://asm.ow2.io) - Generation of dynamic proxies.
 
 ## Authors
+
 * **RomanQed** - *Main work* - [RomanQed](https://github.com/RomanQed)
 
 See also the list of [contributors](https://github.com/RomanQed/jeflect/contributors)
