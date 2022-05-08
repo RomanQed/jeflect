@@ -44,7 +44,8 @@ abstract class CommonMethodCreator implements Consumer<MethodVisitor> {
             if (i < 6) {
                 visitor.visitInsn(INT_0 + i);
             } else {
-                visitor.visitIntInsn(Opcodes.BIPUSH, i);
+                int opcode = i <= Byte.MAX_VALUE ? Opcodes.BIPUSH : Opcodes.SIPUSH;
+                visitor.visitIntInsn(opcode, i);
             }
             visitor.visitInsn(Opcodes.AALOAD);
             castArgument(visitor, arguments[i]);
