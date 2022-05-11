@@ -6,7 +6,7 @@ A set of utilities designed to interact with reflection and speed up it.
 
 To install it, you will need:
 
-* any build of the JDK no older than version 8
+* java 8+
 * Maven/Gradle
 
 ### Features
