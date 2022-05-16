@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class LambdaTest extends Assertions {
+public class FreeLambdaTest extends Assertions {
     // Interface codes
     static final int I_S = 1;
     static final int I_DV = 2;
@@ -32,12 +32,12 @@ public class LambdaTest extends Assertions {
         Method vm = Interface.class.getDeclaredMethod("vm");
         // Pack
         Lambda lsm = ReflectUtil.packMethod(sm);
-        Lambda ldm = ReflectUtil.packMethod(dm, i);
-        Lambda lvm = ReflectUtil.packMethod(vm, i);
+        Lambda ldm = ReflectUtil.packMethod(dm);
+        Lambda lvm = ReflectUtil.packMethod(vm);
         assertAll(
                 () -> assertEquals(I_S, lsm.call(args)),
-                () -> assertEquals(I_DV, ldm.call(args)),
-                () -> assertEquals(I_V, lvm.call(args))
+                () -> assertEquals(I_DV, ldm.call(i, args)),
+                () -> assertEquals(I_V, lvm.call(i, args))
         );
     }
 
@@ -50,12 +50,12 @@ public class LambdaTest extends Assertions {
         Method vfm = Class.class.getDeclaredMethod("vfm");
         // Pack
         Lambda lsm = ReflectUtil.packMethod(sm);
-        Lambda lvm = ReflectUtil.packMethod(vm, c);
-        Lambda lfm = ReflectUtil.packMethod(vfm, c);
+        Lambda lvm = ReflectUtil.packMethod(vm);
+        Lambda lfm = ReflectUtil.packMethod(vfm);
         assertAll(
                 () -> assertEquals(C_S, lsm.call(args)),
-                () -> assertEquals(C_V, lvm.call(args)),
-                () -> assertEquals(C_VF, lfm.call(args))
+                () -> assertEquals(C_V, lvm.call(c, args)),
+                () -> assertEquals(C_VF, lfm.call(c, args))
         );
     }
 
@@ -69,14 +69,14 @@ public class LambdaTest extends Assertions {
         Method vam = AbstractClass.class.getDeclaredMethod("vam");
         // Pack
         Lambda lsm = ReflectUtil.packMethod(sm);
-        Lambda lvm = ReflectUtil.packMethod(vm, c);
-        Lambda lfm = ReflectUtil.packMethod(vfm, c);
-        Lambda lam = ReflectUtil.packMethod(vam, c);
+        Lambda lvm = ReflectUtil.packMethod(vm);
+        Lambda lfm = ReflectUtil.packMethod(vfm);
+        Lambda lam = ReflectUtil.packMethod(vam);
         assertAll(
                 () -> assertEquals(AC_S, lsm.call(args)),
-                () -> assertEquals(AC_V, lvm.call(args)),
-                () -> assertEquals(AC_VF, lfm.call(args)),
-                () -> assertEquals(AC_VA, lam.call(args))
+                () -> assertEquals(AC_V, lvm.call(c, args)),
+                () -> assertEquals(AC_VF, lfm.call(c, args)),
+                () -> assertEquals(AC_VA, lam.call(c, args))
         );
     }
 
@@ -124,12 +124,12 @@ public class LambdaTest extends Assertions {
         Method threeM = Pairs.class.getDeclaredMethod("three", String.class, char.class);
         // Pack
         Lambda one = ReflectUtil.packMethod(oneM);
-        Lambda two = ReflectUtil.packMethod(twoM, p);
+        Lambda two = ReflectUtil.packMethod(twoM);
         Lambda three = ReflectUtil.packMethod(threeM);
         // Test
         assertAll(
                 () -> assertEquals(1, one.call(new Object[]{"1", new Character[0]})),
-                () -> assertEquals(21, two.call(new Object[]{5, 6})),
+                () -> assertEquals(21, two.call(p, new Object[]{5, 6})),
                 () -> assertEquals("message", three.call(new Object[]{"messag", 'e'}))
         );
     }
@@ -154,7 +154,7 @@ public class LambdaTest extends Assertions {
 
     @Test
     public void testVeryLongMethod() throws Throwable {
-        Method method = Arrays.stream(VeryLongMethod.class.getDeclaredMethods()).
+        Method method = Arrays.stream(BoundLambdaTest.VeryLongMethod.class.getDeclaredMethods()).
                 filter(e -> e.getName().equals("longMethod")).
                 findFirst().
                 orElse(null);
@@ -172,11 +172,11 @@ public class LambdaTest extends Assertions {
 
     public interface Interface {
         static int sm() {
-            return LambdaTest.I_S;
+            return I_S;
         }
 
         default int dm() {
-            return LambdaTest.I_DV;
+            return I_DV;
         }
 
         int vm();
@@ -773,35 +773,35 @@ public class LambdaTest extends Assertions {
     static class InterfaceImpl implements Interface {
         @Override
         public int vm() {
-            return LambdaTest.I_V;
+            return I_V;
         }
     }
 
     public static class Class {
         public static int sm() {
-            return LambdaTest.C_S;
+            return C_S;
         }
 
         public int vm() {
-            return LambdaTest.C_V;
+            return C_V;
         }
 
         public final int vfm() {
-            return LambdaTest.C_VF;
+            return C_VF;
         }
     }
 
     public static abstract class AbstractClass {
         public static int sm() {
-            return LambdaTest.AC_S;
+            return AC_S;
         }
 
         public int vm() {
-            return LambdaTest.AC_V;
+            return AC_V;
         }
 
         public final int vfm() {
-            return LambdaTest.AC_VF;
+            return AC_VF;
         }
 
         public abstract int vam();
@@ -811,7 +811,7 @@ public class LambdaTest extends Assertions {
 
         @Override
         public int vam() {
-            return LambdaTest.AC_VA;
+            return AC_VA;
         }
     }
 }
