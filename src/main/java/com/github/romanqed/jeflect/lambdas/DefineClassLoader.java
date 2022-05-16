@@ -3,7 +3,10 @@ package com.github.romanqed.jeflect.lambdas;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-final class DefineClassLoader extends ClassLoader implements DefineLoader {
+/**
+ * The default {@link DefineLoader} used by the lambda factory.
+ */
+public final class DefineClassLoader extends ClassLoader implements DefineLoader {
     @Override
     public Class<?> define(String name, byte[] buffer) {
         return AccessController.doPrivileged(
@@ -18,5 +21,10 @@ final class DefineClassLoader extends ClassLoader implements DefineLoader {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return this;
     }
 }

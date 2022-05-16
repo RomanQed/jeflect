@@ -1,5 +1,6 @@
 package com.github.romanqed.jeflect;
 
+import com.github.romanqed.jeflect.lambdas.DefineLoader;
 import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import com.github.romanqed.jeflect.meta.LambdaType;
@@ -10,6 +11,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -27,6 +29,33 @@ public final class ReflectUtil {
     public static final LambdaType<Callable> CALLABLE = LambdaType.fromClass(Callable.class);
     private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory();
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
+    private static final Method DEFINE_METHOD = findDefineMethod();
+
+    private static Method findDefineMethod() {
+        Class<ClassLoader> clazz = ClassLoader.class;
+        try {
+            Method method = clazz.getDeclaredMethod("defineClass",
+                    String.class,
+                    byte[].class,
+                    int.class,
+                    int.class);
+            method.setAccessible(true);
+            return method;
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Can't find defineClass method from ClassLoader");
+        }
+    }
+
+    /**
+     * Wraps the classloader into an interface that allows you to define new classes.
+     *
+     * @param loader the {@link ClassLoader} to wrap
+     * @return the resulting object implementing interface {@link DefineLoader}
+     */
+    public static DefineLoader wrapClassLoader(ClassLoader loader) {
+        Objects.requireNonNull(loader);
+        return new WrapClassLoader(loader, DEFINE_METHOD);
+    }
 
     /**
      * Extracts the value from the annotation by name using basic reflection tools.

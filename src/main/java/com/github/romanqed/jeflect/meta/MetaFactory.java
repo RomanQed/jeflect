@@ -15,6 +15,10 @@ public final class MetaFactory {
         this.lookup = Objects.requireNonNull(lookup);
     }
 
+    public MetaFactory() {
+        this.lookup = MethodHandles.lookup();
+    }
+
     /**
      * @return {@link java.lang.invoke.MethodHandles.Lookup} instance, which is used to package methods
      */

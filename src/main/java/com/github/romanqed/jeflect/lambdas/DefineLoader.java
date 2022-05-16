@@ -20,4 +20,9 @@ public interface DefineLoader {
      * @return the resulting {@link Class} object, or null if class not found
      */
     Class<?> load(String name);
+
+    /**
+     * @return the classloader used
+     */
+    ClassLoader getClassLoader();
 }
