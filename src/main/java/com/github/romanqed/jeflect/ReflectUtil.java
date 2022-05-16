@@ -1,13 +1,14 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.meta.LambdaClass;
+import com.github.romanqed.jeflect.lambdas.Lambda;
+import com.github.romanqed.jeflect.lambdas.LambdaFactory;
+import com.github.romanqed.jeflect.meta.LambdaType;
 import com.github.romanqed.jeflect.meta.MetaFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
@@ -19,13 +20,12 @@ import java.util.function.Function;
  */
 public final class ReflectUtil {
     @SuppressWarnings("rawtypes")
-    public static final LambdaClass<Consumer> CONSUMER = LambdaClass.fromClass(Consumer.class);
+    public static final LambdaType<Consumer> CONSUMER = LambdaType.fromClass(Consumer.class);
     @SuppressWarnings("rawtypes")
-    public static final LambdaClass<Function> FUNCTION = LambdaClass.fromClass(Function.class);
+    public static final LambdaType<Function> FUNCTION = LambdaType.fromClass(Function.class);
     @SuppressWarnings("rawtypes")
-    public static final LambdaClass<Callable> CALLABLE = LambdaClass.fromClass(Callable.class);
+    public static final LambdaType<Callable> CALLABLE = LambdaType.fromClass(Callable.class);
     private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory();
-    private static final MethodFactory LAMBDA_METHOD_FACTORY = new MethodFactory();
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
 
     /**
@@ -67,12 +67,8 @@ public final class ReflectUtil {
      * @param method method for packaging
      * @param bind   instance of the object to which the packaged method will be bound
      * @return the object instantiating the {@link Lambda}
-     * @throws InvocationTargetException if an error occurred inside the proxy constructor
-     * @throws InstantiationException    if the proxy could not be created
-     * @throws IllegalAccessException    if the proxy could not be accessed
      */
-    public static Lambda packMethod(Method method, Object bind) throws
-            InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static Lambda packMethod(Method method, Object bind) {
         return LAMBDA_FACTORY.packMethod(method, bind);
     }
 
@@ -81,27 +77,9 @@ public final class ReflectUtil {
      *
      * @param method method for packaging
      * @return the object instantiating the {@link Lambda}
-     * @throws InvocationTargetException if an error occurred inside the proxy constructor
-     * @throws InstantiationException    if the proxy could not be created
-     * @throws IllegalAccessException    if the proxy could not be accessed
      */
-    public static Lambda packMethod(Method method) throws
-            InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static Lambda packMethod(Method method) {
         return LAMBDA_FACTORY.packMethod(method);
-    }
-
-    /**
-     * Packages the passed method into a {@link LambdaMethod}.
-     *
-     * @param method method for packaging
-     * @return the object instantiating the {@link LambdaMethod}
-     * @throws InvocationTargetException if an error occurred inside the proxy constructor
-     * @throws InstantiationException    if the proxy could not be created
-     * @throws IllegalAccessException    if the proxy could not be accessed
-     */
-    public static LambdaMethod packLambdaMethod(Method method) throws
-            InvocationTargetException, InstantiationException, IllegalAccessException {
-        return LAMBDA_METHOD_FACTORY.packMethod(method);
     }
 
     @SuppressWarnings("unchecked")
@@ -112,7 +90,7 @@ public final class ReflectUtil {
     }
 
     /**
-     * Packages {@link MethodHandle} into the passed {@link LambdaClass}.
+     * Packages {@link MethodHandle} into the passed {@link LambdaType}.
      *
      * @param clazz  lambda class for packaging
      * @param handle handle for packaging
@@ -122,12 +100,12 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public static <T> T packLambdaHandle(LambdaClass<T> clazz, MethodHandle handle, Object bind) throws Throwable {
+    public static <T> T packLambdaHandle(LambdaType<T> clazz, MethodHandle handle, Object bind) throws Throwable {
         return META_FACTORY.packLambdaHandle(clazz, handle, bind);
     }
 
     /**
-     * Automatically unreflects and packages {@link Method} into the passed {@link LambdaClass}.
+     * Automatically unreflects and packages {@link Method} into the passed {@link LambdaType}.
      *
      * @param clazz  lambda class for packaging
      * @param method method for packaging
@@ -137,12 +115,12 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public static <T> T packLambdaMethod(LambdaClass<T> clazz, Method method, Object bind) throws Throwable {
+    public static <T> T packLambdaMethod(LambdaType<T> clazz, Method method, Object bind) throws Throwable {
         return META_FACTORY.packLambdaMethod(clazz, method, bind);
     }
 
     /**
-     * Automatically unreflects and packages {@link Constructor} into the passed {@link LambdaClass}.
+     * Automatically unreflects and packages {@link Constructor} into the passed {@link LambdaType}.
      *
      * @param clazz       lambda class for packaging
      * @param constructor constructor for packaging
@@ -150,12 +128,12 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public static <T> T packLambdaConstructor(LambdaClass<T> clazz, Constructor<?> constructor) throws Throwable {
+    public static <T> T packLambdaConstructor(LambdaType<T> clazz, Constructor<?> constructor) throws Throwable {
         return META_FACTORY.packLambdaConstructor(clazz, constructor);
     }
 
     /**
-     * Automatically unreflects and packages static {@link Method} into the passed {@link LambdaClass}.
+     * Automatically unreflects and packages static {@link Method} into the passed {@link LambdaType}.
      *
      * @param clazz  lambda class for packaging
      * @param method method for packaging
@@ -163,7 +141,7 @@ public final class ReflectUtil {
      * @return the object instantiating the passed lambda
      * @throws Throwable if any errors occurred during the packaging process
      */
-    public static <T> T packLambdaMethod(LambdaClass<T> clazz, Method method) throws Throwable {
+    public static <T> T packLambdaMethod(LambdaType<T> clazz, Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(clazz, method);
     }
 

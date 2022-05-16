@@ -62,7 +62,7 @@ public class Main {
 ### Packaging of the method using proxy
 
 ```Java
-import com.github.romanqed.jeflect.Lambda;
+import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.ReflectUtil;
 
 public class Main {
@@ -83,7 +83,7 @@ public class Main {
 
 ```Java
 import com.github.romanqed.jeflect.ReflectUtil;
-import com.github.romanqed.jeflect.meta.LambdaClass;
+import com.github.romanqed.jeflect.meta.LambdaType;
 
 public class Main {
     public static void main(String[] args) throws Throwable {

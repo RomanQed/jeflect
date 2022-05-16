@@ -11,11 +11,11 @@ import java.util.Optional;
  *
  * @param <T> the type corresponding to the lambda type
  */
-public class LambdaClass<T> {
+public class LambdaType<T> {
     private final Class<T> lambdaClass;
     private final Method lambdaMethod;
 
-    private LambdaClass(Class<T> clazz, Method method) {
+    private LambdaType(Class<T> clazz, Method method) {
         this.lambdaClass = clazz;
         this.lambdaMethod = method;
     }
@@ -25,9 +25,9 @@ public class LambdaClass<T> {
      *
      * @param clazz clazz to be packaged
      * @param <T>   the type corresponding to the lambda type
-     * @return instance of {@link LambdaClass}
+     * @return instance of {@link LambdaType}
      */
-    public static <T> LambdaClass<T> fromClass(Class<T> clazz) {
+    public static <T> LambdaType<T> fromClass(Class<T> clazz) {
         Objects.requireNonNull(clazz);
         if (!clazz.isInterface()) {
             throw new IllegalArgumentException("Invalid lambda class");
@@ -39,7 +39,7 @@ public class LambdaClass<T> {
         if (!found.isPresent()) {
             throw new IllegalArgumentException("Invalid lambda class");
         }
-        return new LambdaClass<>(clazz, found.get());
+        return new LambdaType<>(clazz, found.get());
     }
 
     /**
@@ -66,10 +66,10 @@ public class LambdaClass<T> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof LambdaClass)) {
+        if (!(obj instanceof LambdaType)) {
             return false;
         }
-        return lambdaClass.equals(((LambdaClass<?>) obj).lambdaClass);
+        return lambdaClass.equals(((LambdaType<?>) obj).lambdaClass);
     }
 
     @Override

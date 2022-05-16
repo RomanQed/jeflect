@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect;
+package com.github.romanqed.jeflect.lambdas;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -15,7 +15,6 @@ final class Constants {
     static final String FIELD_NAME = "body";
     static final String OBJECT = "java/lang/Object";
     static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
-    static final String LAMBDA_METHOD = Type.getType(LambdaMethod.class).getInternalName();
     static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
     static final String VOID = "V";
     static final Map<String, String> PRIMITIVES = getPrimitives();
