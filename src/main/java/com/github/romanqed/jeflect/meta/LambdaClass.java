@@ -12,11 +12,11 @@ import java.util.Optional;
  * @param <T> the type corresponding to the lambda type
  */
 public class LambdaClass<T> {
-    private final Class<T> clazz;
+    private final Class<T> lambdaClass;
     private final Method lambdaMethod;
 
     private LambdaClass(Class<T> clazz, Method method) {
-        this.clazz = clazz;
+        this.lambdaClass = clazz;
         this.lambdaMethod = method;
     }
 
@@ -46,7 +46,7 @@ public class LambdaClass<T> {
      * @return java class object, contains lambda type
      */
     public Class<T> getLambdaClass() {
-        return clazz;
+        return lambdaClass;
     }
 
     /**
@@ -57,7 +57,23 @@ public class LambdaClass<T> {
     }
 
     @Override
+    public int hashCode() {
+        return lambdaClass.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof LambdaClass)) {
+            return false;
+        }
+        return lambdaClass.equals(((LambdaClass<?>) obj).lambdaClass);
+    }
+
+    @Override
     public String toString() {
-        return "Lambda " + clazz.getSimpleName() + " with method " + lambdaMethod.getName();
+        return "Lambda " + lambdaClass.getSimpleName() + " with method " + lambdaMethod.getName();
     }
 }
