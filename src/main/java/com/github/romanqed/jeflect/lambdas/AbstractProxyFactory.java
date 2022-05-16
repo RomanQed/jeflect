@@ -54,6 +54,8 @@ abstract class AbstractProxyFactory implements ProxyFactory {
         createArguments(call, data.getArguments(), 1);
         // Invoke method
         invokeMethod(call, data);
+        call.visitMaxs(0, 0);
+        call.visitEnd();
     }
 
     private static void castArgument(MethodVisitor visitor, Type argument) {
@@ -93,7 +95,7 @@ abstract class AbstractProxyFactory implements ProxyFactory {
         if (wrap == null) {
             return;
         }
-        String descriptor = String.format(DESCRIPTOR, name, "L" + wrap + ";");
+        String descriptor = formatDescriptor("L" + wrap + ";", name);
         visitor.visitMethodInsn(Opcodes.INVOKESTATIC, wrap, "valueOf", descriptor, false);
     }
 

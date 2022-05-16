@@ -1,5 +1,6 @@
 package com.github.romanqed.jeflect;
 
+import com.github.romanqed.jeflect.lambdas.Lambda;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-public class LambdaMethodTest extends Assertions {
+public class BoundLambdaTest extends Assertions {
     // Interface codes
     static final int I_S = 1;
     static final int I_DV = 2;
@@ -30,9 +31,9 @@ public class LambdaMethodTest extends Assertions {
         Method dm = Interface.class.getDeclaredMethod("dm");
         Method vm = Interface.class.getDeclaredMethod("vm");
         // Pack
-        LambdaMethod lsm = ReflectUtil.packLambdaMethod(sm);
-        LambdaMethod ldm = ReflectUtil.packLambdaMethod(dm);
-        LambdaMethod lvm = ReflectUtil.packLambdaMethod(vm);
+        Lambda lsm = ReflectUtil.packMethod(sm);
+        Lambda ldm = ReflectUtil.packMethod(dm);
+        Lambda lvm = ReflectUtil.packMethod(vm);
         assertAll(
                 () -> assertEquals(I_S, lsm.call(args)),
                 () -> assertEquals(I_DV, ldm.call(i, args)),
@@ -48,9 +49,9 @@ public class LambdaMethodTest extends Assertions {
         Method vm = Class.class.getDeclaredMethod("vm");
         Method vfm = Class.class.getDeclaredMethod("vfm");
         // Pack
-        LambdaMethod lsm = ReflectUtil.packLambdaMethod(sm);
-        LambdaMethod lvm = ReflectUtil.packLambdaMethod(vm);
-        LambdaMethod lfm = ReflectUtil.packLambdaMethod(vfm);
+        Lambda lsm = ReflectUtil.packMethod(sm);
+        Lambda lvm = ReflectUtil.packMethod(vm);
+        Lambda lfm = ReflectUtil.packMethod(vfm);
         assertAll(
                 () -> assertEquals(C_S, lsm.call(args)),
                 () -> assertEquals(C_V, lvm.call(c, args)),
@@ -67,10 +68,10 @@ public class LambdaMethodTest extends Assertions {
         Method vfm = AbstractClass.class.getDeclaredMethod("vfm");
         Method vam = AbstractClass.class.getDeclaredMethod("vam");
         // Pack
-        LambdaMethod lsm = ReflectUtil.packLambdaMethod(sm);
-        LambdaMethod lvm = ReflectUtil.packLambdaMethod(vm);
-        LambdaMethod lfm = ReflectUtil.packLambdaMethod(vfm);
-        LambdaMethod lam = ReflectUtil.packLambdaMethod(vam);
+        Lambda lsm = ReflectUtil.packMethod(sm);
+        Lambda lvm = ReflectUtil.packMethod(vm);
+        Lambda lfm = ReflectUtil.packMethod(vfm);
+        Lambda lam = ReflectUtil.packMethod(vam);
         assertAll(
                 () -> assertEquals(AC_S, lsm.call(args)),
                 () -> assertEquals(AC_V, lvm.call(c, args)),
@@ -91,15 +92,15 @@ public class LambdaMethodTest extends Assertions {
         Method dbl = Common.class.getDeclaredMethod("getDouble", double.class);
         Method arr = Common.class.getDeclaredMethod("getArray", Object[].class);
         // Pack
-        LambdaMethod lBool = ReflectUtil.packLambdaMethod(bool);
-        LambdaMethod lChar = ReflectUtil.packLambdaMethod(chr);
-        LambdaMethod lByte = ReflectUtil.packLambdaMethod(bt);
-        LambdaMethod lShort = ReflectUtil.packLambdaMethod(sh);
-        LambdaMethod lInt = ReflectUtil.packLambdaMethod(it);
-        LambdaMethod lFloat = ReflectUtil.packLambdaMethod(flt);
-        LambdaMethod lLong = ReflectUtil.packLambdaMethod(lng);
-        LambdaMethod lDouble = ReflectUtil.packLambdaMethod(dbl);
-        LambdaMethod lArray = ReflectUtil.packLambdaMethod(arr);
+        Lambda lBool = ReflectUtil.packMethod(bool);
+        Lambda lChar = ReflectUtil.packMethod(chr);
+        Lambda lByte = ReflectUtil.packMethod(bt);
+        Lambda lShort = ReflectUtil.packMethod(sh);
+        Lambda lInt = ReflectUtil.packMethod(it);
+        Lambda lFloat = ReflectUtil.packMethod(flt);
+        Lambda lLong = ReflectUtil.packMethod(lng);
+        Lambda lDouble = ReflectUtil.packMethod(dbl);
+        Lambda lArray = ReflectUtil.packMethod(arr);
         // Test
         String[] array = new String[]{"a", "b", "c"};
         assertAll(
@@ -122,9 +123,9 @@ public class LambdaMethodTest extends Assertions {
         Method twoM = Pairs.class.getDeclaredMethod("two", int.class, Integer.class);
         Method threeM = Pairs.class.getDeclaredMethod("three", String.class, char.class);
         // Pack
-        LambdaMethod one = ReflectUtil.packLambdaMethod(oneM);
-        LambdaMethod two = ReflectUtil.packLambdaMethod(twoM);
-        LambdaMethod three = ReflectUtil.packLambdaMethod(threeM);
+        Lambda one = ReflectUtil.packMethod(oneM);
+        Lambda two = ReflectUtil.packMethod(twoM);
+        Lambda three = ReflectUtil.packMethod(threeM);
         // Test
         assertAll(
                 () -> assertEquals(1, one.call(new Object[]{"1", new Character[0]})),
@@ -137,7 +138,7 @@ public class LambdaMethodTest extends Assertions {
     public void testException() throws Throwable {
         Method method = ExceptClass.class.getDeclaredMethod("throwsException");
         // Pack
-        LambdaMethod except = ReflectUtil.packLambdaMethod(method);
+        Lambda except = ReflectUtil.packMethod(method);
         // Test
         assertThrows(IOException.class, () -> except.call(new Object[0]));
     }
@@ -146,7 +147,7 @@ public class LambdaMethodTest extends Assertions {
     public void testVarArgs() throws Throwable {
         Method method = VarArgs.class.getDeclaredMethod("sum", int[].class);
         // Pack
-        LambdaMethod sum = ReflectUtil.packLambdaMethod(method);
+        Lambda sum = ReflectUtil.packMethod(method);
         // Test
         assertEquals(6, sum.call(new Object[]{new int[]{1, 2, 3}}));
     }
@@ -158,7 +159,7 @@ public class LambdaMethodTest extends Assertions {
                 findFirst().
                 orElse(null);
         // Pack
-        LambdaMethod longMethod = ReflectUtil.packLambdaMethod(method);
+        Lambda longMethod = ReflectUtil.packMethod(method);
         // Test
         Object[] args = new Object[255];
         int sum = 0;
