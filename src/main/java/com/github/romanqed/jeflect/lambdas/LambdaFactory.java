@@ -28,7 +28,7 @@ public final class LambdaFactory {
     }
 
     /**
-     * @return {@link java.lang.invoke.MethodHandles.Lookup} instance, which is used to define proxies
+     * @return {@link DefineLoader} instance, which is used to define proxies
      */
     public DefineLoader getLoader() {
         return loader;
