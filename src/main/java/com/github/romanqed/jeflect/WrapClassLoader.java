@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-class WrapClassLoader implements DefineLoader {
+final class WrapClassLoader implements DefineLoader {
     private final ClassLoader body;
     private final Method define;
 
