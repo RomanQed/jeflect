@@ -65,9 +65,13 @@ public class Main {
 import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.ReflectUtil;
 
+import java.lang.reflect.Method;
+
 public class Main {
     public static void main(String[] args) throws Throwable {
-        Lambda packed = ReflectUtil.packMethod(ToPack.class.getMethod("packMe"), new ToPack());
+        ToPack toPack = new ToPack();
+        Method method = ToPack.class.getDeclaredMethod("packMe");
+        Lambda packed = ReflectUtil.packMethod(method, new ToPack());
         System.out.println(packed.call(new Object[0]));
     }
 
@@ -85,10 +89,14 @@ public class Main {
 import com.github.romanqed.jeflect.ReflectUtil;
 import com.github.romanqed.jeflect.meta.LambdaType;
 
+import java.lang.reflect.Method;
+
 public class Main {
     public static void main(String[] args) throws Throwable {
-        LambdaClass<MyLambda> clazz = LambdaClass.fromClass(MyLambda.class);
-        MyLambda lambda = ReflectUtil.packLambdaMethod(clazz, Main.class.getDeclaredMethod("toPack", int.class), new Main());
+        LambdaType<MyLambda> clazz = LambdaType.fromClass(MyLambda.class);
+        Main main = new Main();
+        Method method = Main.class.getDeclaredMethod("toPack", int.class);
+        MyLambda lambda = ReflectUtil.packLambdaMethod(clazz, method, main);
         System.out.println(lambda.increment(0));
     }
 
@@ -102,15 +110,18 @@ public class Main {
 }
 ```
 
-### Packaging of the method using LambdaMethod
+### Packaging of the method using not bounded lambda
 
 ```Java
-import com.github.romanqed.jeflect.LambdaMethod;
+import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.ReflectUtil;
+
+import java.lang.reflect.Method;
 
 public class Main {
     public static void main(String[] args) throws Throwable {
-        LambdaMethod lambda = ReflectUtil.packLambdaMethod(Main.class.getDeclaredMethod("toPack", int.class));
+        Method method = Main.class.getDeclaredMethod("toPack", int.class);
+        Lambda lambda = ReflectUtil.packMethod(method);
         System.out.println(lambda.call(new Main(), new Object[]{0}));
     }
 
