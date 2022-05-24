@@ -7,20 +7,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-final class Constants {
-    static final String INIT = "<init>";
-    static final String METHOD = "call";
-    static final String DESCRIPTOR = "(%s)%s";
-    static final String EMPTY_DESCRIPTOR = "()V";
-    static final String FIELD_NAME = "body";
-    static final String OBJECT = "java/lang/Object";
-    static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
-    static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
-    static final String VOID = "V";
-    static final Map<String, String> PRIMITIVES = getPrimitives();
-    static final Map<String, String> PRIMITIVE_METHODS = getPrimitiveMethods();
-    static final Object[] EMPTY_ARGUMENTS = new Object[0];
-    static final String THROWABLE = "java/lang/Throwable";
+public final class Constants {
+    public static final String INIT = "<init>";
+    public static final String METHOD = "call";
+    public static final String DESCRIPTOR = "(%s)%s";
+    public static final String EMPTY_DESCRIPTOR = "()V";
+    public static final String FIELD_NAME = "body";
+    public static final String OBJECT = "java/lang/Object";
+    public static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
+    public static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
+    public static final String VOID = "V";
+    public static final Map<String, String> PRIMITIVES = getPrimitives();
+    public static final Map<String, String> PRIMITIVE_METHODS = getPrimitiveMethods();
+    public static final Object[] EMPTY_ARGUMENTS = new Object[0];
+    public static final String THROWABLE = "java/lang/Throwable";
 
     private static Map<String, String> getPrimitives() {
         Map<String, String> ret = new HashMap<>();
@@ -48,7 +48,7 @@ final class Constants {
         return Collections.unmodifiableMap(ret);
     }
 
-    static String formatDescriptor(String ret, String arg) {
+    public static String formatDescriptor(String ret, String arg) {
         return String.format(DESCRIPTOR, arg, ret);
     }
 }
