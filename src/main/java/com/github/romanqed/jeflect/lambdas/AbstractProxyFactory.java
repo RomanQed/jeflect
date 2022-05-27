@@ -8,11 +8,9 @@ import org.objectweb.asm.Type;
 import java.lang.reflect.Method;
 
 import static com.github.romanqed.jeflect.lambdas.AsmUtil.*;
+import static com.github.romanqed.jeflect.lambdas.Constants.*;
 
 abstract class AbstractProxyFactory implements ProxyFactory {
-    protected static final String DESCRIPTOR = formatDescriptor("L" + OBJECT + ";", "[L" + OBJECT + ";");
-    protected static final String[] EXCEPTIONS = new String[]{THROWABLE};
-
     protected static void prepareArguments(MethodVisitor visitor, Type[] arguments, int offset) {
         for (int i = 0; i < arguments.length; ++i) {
             visitor.visitVarInsn(Opcodes.ALOAD, offset);
@@ -62,7 +60,7 @@ abstract class AbstractProxyFactory implements ProxyFactory {
     }
 
     protected static void createStaticMethod(ClassWriter writer, MethodData data) {
-        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, DESCRIPTOR, null, EXCEPTIONS);
+        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, BOUND_DESCRIPTOR, null, EXCEPTIONS);
         // Create arguments
         prepareArguments(call, data.getArguments(), 1);
         // Invoke method

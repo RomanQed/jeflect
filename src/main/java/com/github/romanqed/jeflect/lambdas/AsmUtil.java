@@ -10,19 +10,14 @@ import java.util.Map;
 
 public final class AsmUtil {
     public static final String INIT = "<init>";
-    public static final String METHOD = "call";
     public static final String DESCRIPTOR = "(%s)%s";
     public static final String EMPTY_DESCRIPTOR = "()V";
-    public static final String FIELD_NAME = "body";
     public static final String OBJECT = "java/lang/Object";
-    public static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
-    public static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
     public static final String VOID = "V";
     public static final Map<String, String> PRIMITIVES = getPrimitives();
     public static final Map<String, String> PRIMITIVE_METHODS = getPrimitiveMethods();
     public static final Object[] EMPTY_ARGUMENTS = new Object[0];
     public static final String THROWABLE = "java/lang/Throwable";
-    public static final int INT_0 = Opcodes.ICONST_0;
 
     private static Map<String, String> getPrimitives() {
         Map<String, String> ret = new HashMap<>();

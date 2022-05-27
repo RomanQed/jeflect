@@ -5,6 +5,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import static com.github.romanqed.jeflect.lambdas.AsmUtil.*;
+import static com.github.romanqed.jeflect.lambdas.Constants.*;
 
 class BoundProxyFactory extends AbstractProxyFactory {
     @Override
@@ -26,7 +27,7 @@ class BoundProxyFactory extends AbstractProxyFactory {
 
     @Override
     protected void createMethod(String name, ClassWriter writer, MethodData data) {
-        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, DESCRIPTOR, null, EXCEPTIONS);
+        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, BOUND_DESCRIPTOR, null, EXCEPTIONS);
         call.visitCode();
         // Load body field to invoke virtual method from it
         call.visitVarInsn(Opcodes.ALOAD, 0);
