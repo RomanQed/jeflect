@@ -36,7 +36,7 @@ public interface Lambda {
      * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     default Object call(Object object) throws Throwable {
-        return call(object, Util.EMPTY_ARGUMENTS);
+        return call(object, AsmUtil.EMPTY_ARGUMENTS);
     }
 
     /**
@@ -46,6 +46,6 @@ public interface Lambda {
      * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     default Object call() throws Throwable {
-        return call(Util.EMPTY_ARGUMENTS);
+        return call(AsmUtil.EMPTY_ARGUMENTS);
     }
 }

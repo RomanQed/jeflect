@@ -4,7 +4,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import static com.github.romanqed.jeflect.lambdas.Util.*;
+import static com.github.romanqed.jeflect.lambdas.AsmUtil.*;
 
 class FreeProxyFactory extends AbstractProxyFactory {
     private static final String DESCRIPTOR = getDescriptor();

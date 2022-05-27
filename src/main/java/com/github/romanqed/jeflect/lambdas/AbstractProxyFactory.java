@@ -7,7 +7,7 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.Method;
 
-import static com.github.romanqed.jeflect.lambdas.Util.*;
+import static com.github.romanqed.jeflect.lambdas.AsmUtil.*;
 
 abstract class AbstractProxyFactory implements ProxyFactory {
     protected static final String DESCRIPTOR = formatDescriptor("L" + OBJECT + ";", "[L" + OBJECT + ";");

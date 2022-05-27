@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Util {
+public final class AsmUtil {
     public static final String INIT = "<init>";
     public static final String METHOD = "call";
     public static final String DESCRIPTOR = "(%s)%s";
