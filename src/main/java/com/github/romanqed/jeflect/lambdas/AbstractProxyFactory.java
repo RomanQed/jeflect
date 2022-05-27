@@ -21,7 +21,7 @@ abstract class AbstractProxyFactory implements ProxyFactory {
                 visitor.visitIntInsn(opcode, i);
             }
             visitor.visitInsn(Opcodes.AALOAD);
-            castValue(visitor, arguments[i]);
+            castReference(visitor, arguments[i]);
         }
     }
 

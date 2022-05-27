@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A utility class containing some methods for the ASM library.
+ */
 public final class AsmUtil {
     public static final String INIT = "<init>";
     public static final String DESCRIPTOR = "(%s)%s";
@@ -49,8 +52,14 @@ public final class AsmUtil {
         return String.format(DESCRIPTOR, arg, ret);
     }
 
-    public static void castValue(MethodVisitor visitor, Type value) {
-        String name = value.getInternalName();
+    /**
+     * Casts the last value on the stack to the specified type.
+     *
+     * @param visitor the visitor containing the method code
+     * @param type    the type to which the value will be cast
+     */
+    public static void castReference(MethodVisitor visitor, Type type) {
+        String name = type.getInternalName();
         if (name.startsWith("[")) {
             visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
             visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
@@ -66,6 +75,12 @@ public final class AsmUtil {
         visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
     }
 
+    /**
+     * Packs the last primitive on the stack.
+     *
+     * @param visitor   the visitor containing the method code
+     * @param primitive the type of primitive to be packed
+     */
     public static void packPrimitive(MethodVisitor visitor, Type primitive) {
         String name = primitive.getInternalName();
         String wrap = PRIMITIVES.get(name);
