@@ -4,7 +4,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import static com.github.romanqed.jeflect.lambdas.Constants.*;
+import static com.github.romanqed.jeflect.lambdas.Util.*;
 
 class FreeProxyFactory extends AbstractProxyFactory {
     private static final String DESCRIPTOR = getDescriptor();
@@ -28,7 +28,7 @@ class FreeProxyFactory extends AbstractProxyFactory {
         // Cast to bound type
         call.visitTypeInsn(Opcodes.CHECKCAST, data.owner.getInternalName());
         // Create arguments
-        createArguments(call, data.getArguments(), 2);
+        prepareArguments(call, data.getArguments(), 2);
         // Invoke method
         invokeMethod(call, data);
         call.visitMaxs(0, 0);

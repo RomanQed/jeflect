@@ -1,5 +1,6 @@
 package com.github.romanqed.jeflect.lambdas;
 
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
@@ -7,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Constants {
+public final class Util {
     public static final String INIT = "<init>";
     public static final String METHOD = "call";
     public static final String DESCRIPTOR = "(%s)%s";
@@ -21,6 +22,7 @@ public final class Constants {
     public static final Map<String, String> PRIMITIVE_METHODS = getPrimitiveMethods();
     public static final Object[] EMPTY_ARGUMENTS = new Object[0];
     public static final String THROWABLE = "java/lang/Throwable";
+    public static final int INT_0 = Opcodes.ICONST_0;
 
     private static Map<String, String> getPrimitives() {
         Map<String, String> ret = new HashMap<>();
@@ -50,5 +52,32 @@ public final class Constants {
 
     public static String formatDescriptor(String ret, String arg) {
         return String.format(DESCRIPTOR, arg, ret);
+    }
+
+    public static void castValue(MethodVisitor visitor, Type value) {
+        String name = value.getInternalName();
+        if (name.startsWith("[")) {
+            visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
+            visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
+            return;
+        }
+        String wrap = PRIMITIVES.get(name);
+        if (wrap != null) {
+            visitor.visitTypeInsn(Opcodes.CHECKCAST, wrap);
+            String method = PRIMITIVE_METHODS.get(name);
+            visitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, wrap, method, "()" + name, false);
+            return;
+        }
+        visitor.visitTypeInsn(Opcodes.CHECKCAST, name);
+    }
+
+    public static void packPrimitive(MethodVisitor visitor, Type primitive) {
+        String name = primitive.getInternalName();
+        String wrap = PRIMITIVES.get(name);
+        if (wrap == null) {
+            return;
+        }
+        String descriptor = formatDescriptor("L" + wrap + ";", name);
+        visitor.visitMethodInsn(Opcodes.INVOKESTATIC, wrap, "valueOf", descriptor, false);
     }
 }

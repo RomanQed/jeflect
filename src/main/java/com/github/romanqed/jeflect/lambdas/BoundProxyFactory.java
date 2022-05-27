@@ -4,7 +4,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import static com.github.romanqed.jeflect.lambdas.Constants.*;
+import static com.github.romanqed.jeflect.lambdas.Util.*;
 
 class BoundProxyFactory extends AbstractProxyFactory {
     @Override
@@ -32,7 +32,7 @@ class BoundProxyFactory extends AbstractProxyFactory {
         call.visitVarInsn(Opcodes.ALOAD, 0);
         call.visitFieldInsn(Opcodes.GETFIELD, name, FIELD_NAME, data.owner.getDescriptor());
         // Create arguments
-        createArguments(call, data.getArguments(), 1);
+        prepareArguments(call, data.getArguments(), 1);
         // Invoke method
         invokeMethod(call, data);
         call.visitMaxs(0, 0);
