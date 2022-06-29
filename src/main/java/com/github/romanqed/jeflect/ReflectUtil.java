@@ -29,7 +29,6 @@ public final class ReflectUtil {
     public static final LambdaType<Callable> CALLABLE = LambdaType.fromClass(Callable.class);
     private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory();
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
-    private static final Method DEFINE_METHOD = findDefineMethod();
 
     private static Method findDefineMethod() {
         Class<ClassLoader> clazz = ClassLoader.class;
@@ -54,7 +53,7 @@ public final class ReflectUtil {
      */
     public static DefineLoader wrapClassLoader(ClassLoader loader) {
         Objects.requireNonNull(loader);
-        return new WrapClassLoader(loader, DEFINE_METHOD);
+        return new WrapClassLoader(loader, findDefineMethod());
     }
 
     /**
