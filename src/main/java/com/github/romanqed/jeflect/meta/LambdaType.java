@@ -11,7 +11,7 @@ import java.util.Optional;
  *
  * @param <T> the type corresponding to the lambda type
  */
-public class LambdaType<T> {
+public final class LambdaType<T> {
     private final Class<T> lambdaClass;
     private final Method lambdaMethod;
 
