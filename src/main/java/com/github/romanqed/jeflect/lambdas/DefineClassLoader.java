@@ -7,6 +7,14 @@ import java.security.PrivilegedAction;
  * The default {@link DefineLoader} used by the lambda factory.
  */
 public final class DefineClassLoader extends ClassLoader implements DefineLoader {
+    public DefineClassLoader() {
+        super();
+    }
+
+    public DefineClassLoader(ClassLoader parent) {
+        super(parent);
+    }
+
     @Override
     public Class<?> define(String name, byte[] buffer) {
         return AccessController.doPrivileged(

@@ -110,7 +110,7 @@ public class Main {
 }
 ```
 
-### Packaging of the method using not bounded lambda
+### Packaging of the method using not bound lambda
 
 ```Java
 import com.github.romanqed.jeflect.lambdas.Lambda;

@@ -15,7 +15,7 @@ public final class LambdaFactory {
     private static final String PROXY = "Proxy";
     private static final String STATIC = "S";
     private static final String VIRTUAL = "V";
-    private static final String BOUNDED = "B";
+    private static final String BOUND = "B";
 
     private final DefineLoader loader;
 
@@ -51,7 +51,7 @@ public final class LambdaFactory {
         if (isStatic && bound) {
             throw new IllegalArgumentException("Can't bind static method to object");
         }
-        String name = (isStatic ? STATIC : VIRTUAL + (bound ? BOUNDED : "")) + PROXY + method.hashCode();
+        String name = (isStatic ? STATIC : VIRTUAL + (bound ? BOUND : "")) + PROXY + method.hashCode();
         Class<?> proxy = loader.load(name);
         if (proxy == null) {
             ProxyFactory factory = bound ? BOUND_FACTORY : FREE_FACTORY;
