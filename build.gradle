@@ -24,6 +24,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     api group: 'org.ow2.asm', name: 'asm', version: '9.3'
+    api group: 'org.ow2.asm', name: 'asm-commons', version: '9.3'
 }
 
 test {

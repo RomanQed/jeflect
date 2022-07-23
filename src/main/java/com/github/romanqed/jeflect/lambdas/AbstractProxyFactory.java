@@ -7,7 +7,7 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.Method;
 
-import static com.github.romanqed.jeflect.lambdas.AsmUtil.*;
+import static com.github.romanqed.jeflect.AsmUtil.*;
 import static com.github.romanqed.jeflect.lambdas.Constants.*;
 
 abstract class AbstractProxyFactory implements ProxyFactory {
@@ -53,7 +53,7 @@ abstract class AbstractProxyFactory implements ProxyFactory {
         MethodVisitor init = writer.visitMethod(Opcodes.ACC_PUBLIC, INIT, EMPTY_DESCRIPTOR, null, new String[0]);
         init.visitCode();
         init.visitVarInsn(Opcodes.ALOAD, 0);
-        init.visitMethodInsn(Opcodes.INVOKESPECIAL, OBJECT, INIT, EMPTY_DESCRIPTOR, false);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, OBJECT_NAME, INIT, EMPTY_DESCRIPTOR, false);
         init.visitInsn(Opcodes.RETURN);
         init.visitMaxs(0, 0);
         init.visitEnd();
@@ -76,7 +76,7 @@ abstract class AbstractProxyFactory implements ProxyFactory {
     @Override
     public byte[] create(String name, Method source) {
         ClassWriter ret = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT, new String[]{LAMBDA});
+        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT_NAME, new String[]{LAMBDA});
         MethodData data = new MethodData(source);
         if (data.isStatic) {
             createEmptyConstructor(ret);

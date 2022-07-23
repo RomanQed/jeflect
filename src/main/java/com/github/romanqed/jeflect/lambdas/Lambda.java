@@ -5,6 +5,8 @@ package com.github.romanqed.jeflect.lambdas;
  * If it has no return value, {@link Lambda#call} will return null.
  */
 public interface Lambda {
+    Object[] EMPTY_ARGUMENTS = new Object[0];
+
     /**
      * Calls the target method with the passed parameters.
      *
@@ -36,7 +38,7 @@ public interface Lambda {
      * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     default Object call(Object object) throws Throwable {
-        return call(object, AsmUtil.EMPTY_ARGUMENTS);
+        return call(object, EMPTY_ARGUMENTS);
     }
 
     /**
@@ -46,6 +48,6 @@ public interface Lambda {
      * @throws Throwable if any exception occurred during the call/preparation of the packed method call.
      */
     default Object call() throws Throwable {
-        return call(AsmUtil.EMPTY_ARGUMENTS);
+        return call(EMPTY_ARGUMENTS);
     }
 }
