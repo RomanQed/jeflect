@@ -8,12 +8,10 @@ import static com.github.romanqed.jeflect.AsmUtil.*;
 final class Constants {
     static final String FIELD_NAME = "body";
     static final String LAMBDA = Type.getType(Lambda.class).getInternalName();
-    static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL;
     static final int INT_0 = Opcodes.ICONST_0;
     static final String METHOD = "call";
     static final String[] EXCEPTIONS = new String[]{THROWABLE.getInternalName()};
     static final String BOUND_DESCRIPTOR = getDescriptor(OBJECT, OBJECT_ARRAY);
     static final String FREE_DESCRIPTOR = getDescriptor(OBJECT, OBJECT, OBJECT_ARRAY);
     static final String VOID = Type.VOID_TYPE.getDescriptor();
-    static final String OBJECT_NAME = OBJECT.getInternalName();
 }

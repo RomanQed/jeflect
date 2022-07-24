@@ -49,16 +49,6 @@ abstract class AbstractProxyFactory implements ProxyFactory {
         visitor.visitInsn(Opcodes.ARETURN);
     }
 
-    protected static void createEmptyConstructor(ClassWriter writer) {
-        MethodVisitor init = writer.visitMethod(Opcodes.ACC_PUBLIC, INIT, EMPTY_DESCRIPTOR, null, new String[0]);
-        init.visitCode();
-        init.visitVarInsn(Opcodes.ALOAD, 0);
-        init.visitMethodInsn(Opcodes.INVOKESPECIAL, OBJECT_NAME, INIT, EMPTY_DESCRIPTOR, false);
-        init.visitInsn(Opcodes.RETURN);
-        init.visitMaxs(0, 0);
-        init.visitEnd();
-    }
-
     protected static void createStaticMethod(ClassWriter writer, MethodData data) {
         MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, BOUND_DESCRIPTOR, null, EXCEPTIONS);
         // Create arguments
@@ -69,20 +59,20 @@ abstract class AbstractProxyFactory implements ProxyFactory {
         call.visitEnd();
     }
 
-    protected abstract void createConstructor(String name, ClassWriter writer, MethodData data);
+    protected abstract void createConstructor(String owner, ClassWriter writer, Type source);
 
-    protected abstract void createMethod(String name, ClassWriter writer, MethodData data);
+    protected abstract void createMethod(String owner, ClassWriter writer, MethodData data);
 
     @Override
     public byte[] create(String name, Method source) {
         ClassWriter ret = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, OBJECT_NAME, new String[]{LAMBDA});
+        ret.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, INTERNAL_OBJECT_NAME, new String[]{LAMBDA});
         MethodData data = new MethodData(source);
         if (data.isStatic) {
             createEmptyConstructor(ret);
             createStaticMethod(ret, data);
         } else {
-            createConstructor(name, ret, data);
+            createConstructor(name, ret, data.owner);
             createMethod(name, ret, data);
         }
         ret.visitEnd();

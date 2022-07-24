@@ -1,5 +1,8 @@
 package com.github.romanqed.jeflect.lambdas;
 
+import com.github.romanqed.jeflect.DefineClassLoader;
+import com.github.romanqed.jeflect.DefineLoader;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Objects;

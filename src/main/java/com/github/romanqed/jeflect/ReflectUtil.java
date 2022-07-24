@@ -1,6 +1,5 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.lambdas.DefineLoader;
 import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import com.github.romanqed.jeflect.meta.LambdaType;

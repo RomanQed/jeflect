@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.lambdas;
+package com.github.romanqed.jeflect;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;

@@ -1,7 +1,5 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.lambdas.DefineLoader;
-
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;

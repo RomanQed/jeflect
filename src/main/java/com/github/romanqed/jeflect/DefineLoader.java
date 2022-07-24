@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.lambdas;
+package com.github.romanqed.jeflect;
 
 /**
  * An interface describing the mechanism that loads a class into memory.
