@@ -5,7 +5,7 @@ import org.objectweb.asm.Type;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-class MethodData {
+final class MethodData {
     final boolean isInterface;
     final Type owner;
     final Type method;

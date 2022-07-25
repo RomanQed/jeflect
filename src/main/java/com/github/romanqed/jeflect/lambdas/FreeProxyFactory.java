@@ -8,7 +8,7 @@ import org.objectweb.asm.Type;
 
 import static com.github.romanqed.jeflect.lambdas.Constants.*;
 
-class FreeProxyFactory extends AbstractProxyFactory {
+final class FreeProxyFactory extends AbstractProxyFactory {
     @Override
     protected void createConstructor(String owner, ClassWriter writer, Type argument) {
         AsmUtil.createEmptyConstructor(writer);

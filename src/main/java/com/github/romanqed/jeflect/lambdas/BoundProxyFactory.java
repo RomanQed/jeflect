@@ -9,7 +9,7 @@ import org.objectweb.asm.Type;
 
 import static com.github.romanqed.jeflect.lambdas.Constants.*;
 
-class BoundProxyFactory extends AbstractProxyFactory {
+final class BoundProxyFactory extends AbstractProxyFactory {
     @Override
     protected void createConstructor(String owner, ClassWriter writer, Type argument) {
         AsmUtil.createConstructor(writer, owner, new Variable(FIELD_NAME, argument));
