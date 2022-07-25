@@ -1,5 +1,7 @@
 package com.github.romanqed.jeflect;
 
+import com.github.romanqed.jeflect.binding.BindingFactory;
+import com.github.romanqed.jeflect.binding.InterfaceType;
 import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import com.github.romanqed.jeflect.meta.LambdaType;
@@ -26,8 +28,10 @@ public final class ReflectUtil {
     public static final LambdaType<Function> FUNCTION = LambdaType.fromClass(Function.class);
     @SuppressWarnings("rawtypes")
     public static final LambdaType<Callable> CALLABLE = LambdaType.fromClass(Callable.class);
-    private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory();
+    private static final DefineLoader LOADER = new DefineClassLoader(ClassLoader.getSystemClassLoader());
+    private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory(LOADER);
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
+    private static final BindingFactory BINDING_FACTORY = new BindingFactory(LOADER);
 
     private static Method findDefineMethod() {
         Class<ClassLoader> clazz = ClassLoader.class;
@@ -200,5 +204,17 @@ public final class ReflectUtil {
     @SuppressWarnings("unchecked")
     public static <R> Callable<R> packCallable(Method method) throws Throwable {
         return META_FACTORY.packLambdaMethod(CALLABLE, method, null);
+    }
+
+    /**
+     * Generates a proxy inherited from the desired interface and instantiates it.
+     *
+     * @param interfaceType interface class
+     * @param bind          instance of the object to bind
+     * @param <T>           interface type
+     * @return proxy instance
+     */
+    public static <T> T bind(InterfaceType<T> interfaceType, Object bind) {
+        return BINDING_FACTORY.bind(interfaceType, bind);
     }
 }

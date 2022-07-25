@@ -12,7 +12,7 @@ import static com.github.romanqed.jeflect.binding.Util.getName;
  * A class describing a factory that creates objects inherited from the specified interface
  * and containing an implementation from the class of the specified object.
  */
-public class BindingFactory {
+public final class BindingFactory {
     private final DefineLoader loader;
 
     public BindingFactory(DefineLoader loader) {
