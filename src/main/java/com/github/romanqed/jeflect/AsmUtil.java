@@ -23,6 +23,8 @@ public final class AsmUtil {
     public static final Type THROWABLE = Type.getType(Throwable.class);
     public static final Map<Type, Type> PRIMITIVES = getPrimitives();
     public static final Map<Type, String> PRIMITIVE_METHODS = getPrimitiveMethods();
+    // Mask constants
+    public final static int ACCESS_MASK = Opcodes.ACC_PROTECTED << 1;
     // Private constants
     static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL;
 
@@ -224,5 +226,9 @@ public final class AsmUtil {
      */
     public static void createConstructor(ClassWriter writer, String owner, Variable... variables) {
         createConstructor(writer, INTERNAL_OBJECT_NAME, owner, variables);
+    }
+
+    public static int resetAccess(int modifiers) {
+        return modifiers & ACCESS_MASK;
     }
 }
