@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The class representing the method. Contains information about the signature and annotations.
+ */
 public abstract class ByteMethod extends AbstractMember {
     private final String descriptor;
     private final LazyType returnType;
@@ -26,20 +29,43 @@ public abstract class ByteMethod extends AbstractMember {
         }
     }
 
+    /**
+     * @return method descriptor
+     */
     public String getDescriptor() {
         return descriptor;
     }
 
+    /**
+     * Returns a list of parameters.
+     * If this method have no parameters, the return value is a list of length 0.
+     * The returned {@link List} is will always be instanced of UnmodifiableList.
+     *
+     * @return a list of parameters
+     */
     public abstract List<ByteParameter> getParameters();
 
+    /**
+     * @return method parameter count
+     */
     public int getParameterCount() {
         return getParameters().size();
     }
 
+    /**
+     * Returns list of exceptions that can be thrown by this method.
+     * If this method have no checked exceptions, the return value is a list of length 0.
+     * The returned {@link List} is will always be instanced of UnmodifiableList.
+     *
+     * @return a list of exceptions
+     */
     public List<LazyType> getExceptionTypes() {
         return exceptionTypes;
     }
 
+    /**
+     * @return {@link LazyType} instance containing return type of this method
+     */
     public LazyType getReturnType() {
         return returnType;
     }
