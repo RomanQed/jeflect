@@ -15,7 +15,7 @@ final class ClassParser extends ClassVisitor {
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        asmClass = new AsmClass(superName, interfaces, name, access);
+        asmClass = new AsmClass(superName, interfaces, name.replace('/', '.'), access);
     }
 
     @Override

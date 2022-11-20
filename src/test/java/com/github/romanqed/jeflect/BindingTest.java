@@ -99,6 +99,23 @@ public class BindingTest extends Assertions {
         boolean[] ba(boolean[] a);
     }
 
+    public interface IA {
+        String iA();
+
+        @Overridable
+        default String dIA() {
+            return "dIA";
+        }
+    }
+
+    public interface IB extends IA {
+        String iB();
+    }
+
+    public interface IC extends IB {
+        String iC();
+    }
+
     public static class TypesImpl {
 
         public int i(int a) {
@@ -156,23 +173,6 @@ public class BindingTest extends Assertions {
         public boolean[] ba(boolean[] a) {
             return a;
         }
-    }
-
-    public interface IA {
-        String iA();
-
-        @Overridable
-        default String dIA() {
-            return "dIA";
-        }
-    }
-
-    public interface IB extends IA {
-        String iB();
-    }
-
-    public interface IC extends IB {
-        String iC();
     }
 
     public static class Impl {
