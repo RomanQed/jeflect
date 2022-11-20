@@ -1,39 +1,41 @@
-package com.github.romanqed.jeflect;
+package com.github.romanqed.jeflect.transformers;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
 import java.security.ProtectionDomain;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
 
 public final class BytecodeTransformer extends CheckedTransformer {
+    private static final int DEFAULT_READER_OPTIONS = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
+    private static final int DEFAULT_WRITER_OPTIONS = ClassWriter.COMPUTE_FRAMES;
     private final int readerOptions;
     private final int writerOptions;
-    private final Map<String, Function<ClassVisitor, ClassVisitor>> providers;
+    private final VisitorProvider provider;
+
+    public BytecodeTransformer(int readerOptions, int writerOptions, VisitorProvider provider) {
+        this.readerOptions = readerOptions;
+        this.writerOptions = writerOptions;
+        this.provider = Objects.requireNonNull(provider);
+    }
 
     public BytecodeTransformer(int readerOptions,
                                int writerOptions,
-                               Map<String, Function<ClassVisitor, ClassVisitor>> providers) {
-        this.readerOptions = readerOptions;
-        this.writerOptions = writerOptions;
-        this.providers = Objects.requireNonNull(providers);
-    }
-
-    private static <K, V> Map<K, V> toMap(K key, V value) {
-        Map<K, V> ret = new HashMap<>();
-        ret.put(key, value);
-        return ret;
+                               String className,
+                               Function<ClassVisitor, ClassVisitor> provider) {
+        this(readerOptions, writerOptions, name -> {
+            if (className.equals(name)) {
+                return provider;
+            }
+            return null;
+        });
     }
 
     public BytecodeTransformer(String className, Function<ClassVisitor, ClassVisitor> provider) {
-        this(ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES,
-                ClassWriter.COMPUTE_FRAMES,
-                toMap(className, provider));
+        this(DEFAULT_READER_OPTIONS, DEFAULT_WRITER_OPTIONS, className, provider);
     }
 
     @Override
@@ -42,13 +44,13 @@ public final class BytecodeTransformer extends CheckedTransformer {
                                       Class<?> classBeingRedefined,
                                       ProtectionDomain protectionDomain,
                                       byte[] classfileBuffer) {
-        Function<ClassVisitor, ClassVisitor> provider = providers.get(className);
-        if (provider == null) {
+        Function<ClassVisitor, ClassVisitor> constructor = provider.get(className);
+        if (constructor == null) {
             return classfileBuffer;
         }
         ClassReader reader = new ClassReader(classfileBuffer);
         ClassWriter writer = new ClassWriter(reader, writerOptions);
-        ClassVisitor visitor = provider.apply(writer);
+        ClassVisitor visitor = constructor.apply(writer);
         reader.accept(visitor, readerOptions);
         return writer.toByteArray();
     }

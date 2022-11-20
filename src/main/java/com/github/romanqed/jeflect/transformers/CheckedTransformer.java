@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect;
+package com.github.romanqed.jeflect.transformers;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
