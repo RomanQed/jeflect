@@ -19,10 +19,14 @@ public abstract class ByteClass extends AbstractMember {
         super(null, name, modifiers);
         this.type = new LazyType(name);
         this.superType = new LazyType(superType);
-        this.interfaces = Collections.unmodifiableList(Arrays
-                .stream(interfaces)
-                .map(LazyType::new)
-                .collect(Collectors.toList()));
+        if (interfaces == null) {
+            this.interfaces = Collections.emptyList();
+        } else {
+            this.interfaces = Collections.unmodifiableList(Arrays
+                    .stream(interfaces)
+                    .map(LazyType::new)
+                    .collect(Collectors.toList()));
+        }
         this.classPackage = extractPackage(name);
     }
 
@@ -37,6 +41,26 @@ public abstract class ByteClass extends AbstractMember {
     public abstract List<ByteField> getFields();
 
     public abstract List<ByteMethod> getMethods();
+
+    public ByteMethod getMethod(String name, String descriptor) throws NoSuchMethodException {
+        List<ByteMethod> methods = getMethods();
+        for (ByteMethod method : methods) {
+            if (method.getName().equals(name) && method.getDescriptor().equals(descriptor)) {
+                return method;
+            }
+        }
+        throw new NoSuchMethodException("Cannot find method " + name + " " + descriptor);
+    }
+
+    public ByteField getField(String name, String descriptor) throws NoSuchFieldException {
+        List<ByteField> fields = getFields();
+        for (ByteField field : fields) {
+            if (field.getName().equals(name) && field.getDescriptor().equals(descriptor)) {
+                return field;
+            }
+        }
+        throw new NoSuchFieldException("Cannot find field " + name + " " + descriptor);
+    }
 
     public LazyType getSuperclass() {
         return superType;
