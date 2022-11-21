@@ -1,8 +1,8 @@
 package com.github.romanqed.jeflect.transformers;
 
 import com.github.romanqed.jeflect.ByteClass;
-import com.github.romanqed.jeflect.parser.AsmClassFileParser;
-import com.github.romanqed.jeflect.parser.ClassFileParser;
+import com.github.romanqed.jeflect.parsers.AsmClassFileParser;
+import com.github.romanqed.jeflect.parsers.ClassFileParser;
 
 import java.security.ProtectionDomain;
 

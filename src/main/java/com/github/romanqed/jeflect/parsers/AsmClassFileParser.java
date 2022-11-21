@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.parser;
+package com.github.romanqed.jeflect.parsers;
 
 import com.github.romanqed.jeflect.ByteClass;
 import org.objectweb.asm.ClassReader;

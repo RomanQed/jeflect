@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.parser;
+package com.github.romanqed.jeflect.parsers;
 
 import com.github.romanqed.jeflect.ByteAnnotation;
 import org.objectweb.asm.AnnotationVisitor;

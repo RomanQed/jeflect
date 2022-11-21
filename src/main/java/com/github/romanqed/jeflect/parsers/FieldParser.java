@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.parser;
+package com.github.romanqed.jeflect.parsers;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.FieldVisitor;

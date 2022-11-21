@@ -1,17 +1,18 @@
-package com.github.romanqed.jeflect.parser;
+package com.github.romanqed.jeflect.parsers;
 
 import com.github.romanqed.jeflect.ByteAnnotation;
-import com.github.romanqed.jeflect.ByteParameter;
+import com.github.romanqed.jeflect.ByteClass;
+import com.github.romanqed.jeflect.ByteField;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-final class AsmParameter extends ByteParameter {
+final class AsmField extends ByteField {
     final List<ByteAnnotation> annotations;
 
-    AsmParameter(String descriptor, int modifiers) {
-        super(descriptor, modifiers);
+    AsmField(ByteClass parent, String descriptor, Object value, String name, int modifiers) {
+        super(parent, descriptor, value, name, modifiers);
         this.annotations = new ArrayList<>();
     }
 
