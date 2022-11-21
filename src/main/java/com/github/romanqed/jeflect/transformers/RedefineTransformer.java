@@ -29,7 +29,7 @@ public abstract class RedefineTransformer extends CheckedTransformer {
                                       ProtectionDomain protectionDomain,
                                       byte[] classfileBuffer) throws Throwable {
         if (classBeingRedefined != null) {
-            return classfileBuffer;
+            throw new IllegalStateException("It is not possible to change the class because it is already loaded");
         }
         ByteClass byteClass = parser.parse(classfileBuffer);
         return transform(loader, byteClass, protectionDomain, classfileBuffer);
