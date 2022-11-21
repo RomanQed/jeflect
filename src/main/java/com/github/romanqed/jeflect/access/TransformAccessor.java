@@ -10,12 +10,16 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * Implementation of {@link Accessor} that uses {@link Instrumentation} and {@link ClassFileTransformer}.
+ */
 public final class TransformAccessor implements Accessor {
     private static final int OPTIONS = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES | ClassReader.SKIP_CODE;
     private final Instrumentation instrumentation;

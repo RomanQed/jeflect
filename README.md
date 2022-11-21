@@ -44,7 +44,7 @@ import com.github.romanqed.jeflect.ReflectUtil;
 
 import java.util.concurrent.Callable;
 
-public class com.github.romanqed.jeflect.Main {
+public class Main {
     public static void main(String[] args) throws Throwable {
         Callable<String> packed = ReflectUtil.packCallable(ToPack.class.getMethod("packMe"), new ToPack());
         System.out.println(packed.call());
@@ -67,7 +67,7 @@ import com.github.romanqed.jeflect.ReflectUtil;
 
 import java.lang.reflect.Method;
 
-public class com.github.romanqed.jeflect.Main {
+public class Main {
     public static void main(String[] args) throws Throwable {
         ToPack toPack = new ToPack();
         Method method = ToPack.class.getDeclaredMethod("packMe");
@@ -91,11 +91,11 @@ import com.github.romanqed.jeflect.meta.LambdaType;
 
 import java.lang.reflect.Method;
 
-public class com.github.romanqed.jeflect.Main {
+public class Main {
     public static void main(String[] args) throws Throwable {
         LambdaType<MyLambda> clazz = LambdaType.fromClass(MyLambda.class);
-        com.github.romanqed.jeflect.Main main = new com.github.romanqed.jeflect.Main();
-        Method method = com.github.romanqed.jeflect.Main.class.getDeclaredMethod("toPack", int.class);
+        Main main = new Main();
+        Method method = Main.class.getDeclaredMethod("toPack", int.class);
         MyLambda lambda = ReflectUtil.packLambdaMethod(clazz, method, main);
         System.out.println(lambda.increment(0));
     }
@@ -118,11 +118,11 @@ import com.github.romanqed.jeflect.ReflectUtil;
 
 import java.lang.reflect.Method;
 
-public class com.github.romanqed.jeflect.Main {
+public class Main {
     public static void main(String[] args) throws Throwable {
-        Method method = com.github.romanqed.jeflect.Main.class.getDeclaredMethod("toPack", int.class);
+        Method method = Main.class.getDeclaredMethod("toPack", int.class);
         Lambda lambda = ReflectUtil.packMethod(method);
-        System.out.println(lambda.call(new com.github.romanqed.jeflect.Main(), new Object[]{0}));
+        System.out.println(lambda.call(new Main(), new Object[]{0}));
     }
 
     public int toPack(int number) {
@@ -138,7 +138,7 @@ public class com.github.romanqed.jeflect.Main {
 
 ## Authors
 
-* **RomanQed** - *com.github.romanqed.jeflect.Main work* - [RomanQed](https://github.com/RomanQed)
+* **RomanQed** - *Main work* - [RomanQed](https://github.com/RomanQed)
 
 See also the list of [contributors](https://github.com/RomanQed/jeflect/contributors)
 who participated in this project.
