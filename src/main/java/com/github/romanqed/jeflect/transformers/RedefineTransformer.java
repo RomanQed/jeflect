@@ -7,6 +7,7 @@ import com.github.romanqed.jeflect.parsers.ClassFileParser;
 import java.security.ProtectionDomain;
 
 public abstract class RedefineTransformer extends CheckedTransformer {
+    private static final String IMMUTABLE_PREFIX = "java";
     private final ClassFileParser parser;
 
     protected RedefineTransformer(ClassFileParser parser) {
@@ -30,6 +31,9 @@ public abstract class RedefineTransformer extends CheckedTransformer {
                                       byte[] classfileBuffer) throws Throwable {
         if (classBeingRedefined != null) {
             throw new IllegalStateException("It is not possible to change the class because it is already loaded");
+        }
+        if (className != null && className.startsWith(IMMUTABLE_PREFIX)) {
+            return classfileBuffer;
         }
         ByteClass byteClass = parser.parse(classfileBuffer);
         return transform(loader, byteClass, protectionDomain, classfileBuffer);

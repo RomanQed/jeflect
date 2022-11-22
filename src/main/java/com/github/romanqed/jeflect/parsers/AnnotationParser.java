@@ -1,6 +1,7 @@
 package com.github.romanqed.jeflect.parsers;
 
 import com.github.romanqed.jeflect.ByteAnnotation;
+import com.github.romanqed.jeflect.EnumEntry;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -29,6 +30,12 @@ final class AnnotationParser extends AnnotationVisitor {
     }
 
     @Override
+    public void visitEnum(String name, String descriptor, String value) {
+        Type type = Type.getType(descriptor);
+        fields.put(name, new EnumEntry(type.getClassName(), value));
+    }
+
+    @Override
     public AnnotationVisitor visitArray(String name) {
         return new ArrayParser(name);
     }
@@ -51,6 +58,12 @@ final class AnnotationParser extends AnnotationVisitor {
         public void visit(String name, Object value) {
             List<Object> values = (List<Object>) fields.computeIfAbsent(this.name, v -> new LinkedList<>());
             values.add(value);
+        }
+
+        @Override
+        public void visitEnum(String name, String descriptor, String value) {
+            Type type = Type.getType(descriptor);
+            this.visit(name, new EnumEntry(type.getClassName(), value));
         }
 
         @Override
