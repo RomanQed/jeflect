@@ -2,6 +2,8 @@ package com.github.romanqed.jeflect;
 
 import com.github.romanqed.jeflect.binding.BindingFactory;
 import com.github.romanqed.jeflect.binding.InterfaceType;
+import com.github.romanqed.jeflect.fields.FieldAccessor;
+import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
 import com.github.romanqed.jeflect.lambdas.Lambda;
 import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import com.github.romanqed.jeflect.meta.LambdaType;
@@ -11,6 +13,7 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -32,6 +35,7 @@ public final class ReflectUtil {
     private static final LambdaFactory LAMBDA_FACTORY = new LambdaFactory(LOADER);
     private static final MetaFactory META_FACTORY = new MetaFactory(MethodHandles.lookup());
     private static final BindingFactory BINDING_FACTORY = new BindingFactory(LOADER);
+    private static final FieldAccessorFactory ACCESSOR_FACTORY = new FieldAccessorFactory(LOADER);
 
     private static Method findDefineMethod() {
         Class<ClassLoader> clazz = ClassLoader.class;
@@ -111,6 +115,16 @@ public final class ReflectUtil {
      */
     public static Lambda packMethod(Method method) {
         return LAMBDA_FACTORY.packMethod(method);
+    }
+
+    /**
+     * Packages the passed constructor into a {@link Lambda}.
+     *
+     * @param constructor constructor for packaging
+     * @return the object instantiating the {@link Lambda}
+     */
+    public static Lambda packConstructor(Constructor<?> constructor) {
+        return LAMBDA_FACTORY.packConstructor(constructor);
     }
 
     @SuppressWarnings("unchecked")
@@ -216,5 +230,15 @@ public final class ReflectUtil {
      */
     public static <T> T bind(InterfaceType<T> interfaceType, Object bind) {
         return BINDING_FACTORY.bind(interfaceType, bind);
+    }
+
+    /**
+     * Packages access to the passed field with {@link FieldAccessor}
+     *
+     * @param field field to be packaged
+     * @return constructed {@link FieldAccessor} instance
+     */
+    public static FieldAccessor packField(Field field) {
+        return ACCESSOR_FACTORY.packField(field);
     }
 }

@@ -7,7 +7,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import static com.github.romanqed.jeflect.lambdas.Constants.*;
+import static com.github.romanqed.jeflect.lambdas.Util.*;
 
 final class BoundProxyFactory extends AbstractProxyFactory {
     @Override

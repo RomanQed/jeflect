@@ -3,6 +3,7 @@ package com.github.romanqed.jeflect.lambdas;
 import com.github.romanqed.jeflect.DefineClassLoader;
 import com.github.romanqed.jeflect.DefineLoader;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public final class LambdaFactory {
     private static final ProxyFactory BOUND_FACTORY = new BoundProxyFactory();
     private static final ProxyFactory FREE_FACTORY = new FreeProxyFactory();
+    private static final ConstructorProxyFactory CONSTRUCTOR_FACTORY = new ConstructorProxyFactory();
     private static final String PROXY = "Proxy";
     private static final String STATIC = "S";
     private static final String VIRTUAL = "V";
@@ -28,6 +30,14 @@ public final class LambdaFactory {
 
     public LambdaFactory() {
         this.loader = new DefineClassLoader();
+    }
+
+    private static String getName(Constructor<?> constructor) {
+        StringBuilder types = new StringBuilder();
+        for (Class<?> type : constructor.getParameterTypes()) {
+            types.append(type.getName());
+        }
+        return constructor.getName() + types;
     }
 
     /**
@@ -79,5 +89,25 @@ public final class LambdaFactory {
      */
     public Lambda packMethod(Method method) {
         return packMethod(method, null);
+    }
+
+    /**
+     * Packages the passed constructor into a {@link Lambda}.
+     *
+     * @param constructor constructor for packaging
+     * @return the object instantiating the {@link Lambda}
+     */
+    public Lambda packConstructor(Constructor<?> constructor) {
+        String name = STATIC + PROXY + getName(constructor).hashCode();
+        Class<?> proxy = loader.load(name);
+        if (proxy == null) {
+            byte[] toLoad = CONSTRUCTOR_FACTORY.create(name, constructor);
+            proxy = loader.define(name, toLoad);
+        }
+        try {
+            return (Lambda) proxy.getDeclaredConstructor().newInstance();
+        } catch (Throwable e) {
+            throw new IllegalStateException("Can't pack constructor due to", e);
+        }
     }
 }

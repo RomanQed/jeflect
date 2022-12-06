@@ -1,64 +1,17 @@
 package com.github.romanqed.jeflect.lambdas;
 
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Method;
 
-import static com.github.romanqed.jeflect.AsmUtil.*;
-import static com.github.romanqed.jeflect.lambdas.Constants.*;
+import static com.github.romanqed.jeflect.AsmUtil.INTERNAL_OBJECT_NAME;
+import static com.github.romanqed.jeflect.AsmUtil.createEmptyConstructor;
+import static com.github.romanqed.jeflect.lambdas.Util.LAMBDA;
+import static com.github.romanqed.jeflect.lambdas.Util.createStaticMethod;
 
 abstract class AbstractProxyFactory implements ProxyFactory {
-    protected static void prepareArguments(MethodVisitor visitor, Type[] arguments, int offset) {
-        for (int i = 0; i < arguments.length; ++i) {
-            visitor.visitVarInsn(Opcodes.ALOAD, offset);
-            if (i < 6) {
-                visitor.visitInsn(INT_0 + i);
-            } else {
-                int opcode = i <= Byte.MAX_VALUE ? Opcodes.BIPUSH : Opcodes.SIPUSH;
-                visitor.visitIntInsn(opcode, i);
-            }
-            visitor.visitInsn(Opcodes.AALOAD);
-            castReference(visitor, arguments[i]);
-        }
-    }
-
-    protected static void invokeMethod(MethodVisitor visitor, MethodData data) {
-        // Select opcode to invoke method
-        int opcode;
-        if (data.isStatic) {
-            opcode = Opcodes.INVOKESTATIC;
-        } else {
-            opcode = data.isInterface ? Opcodes.INVOKEINTERFACE : Opcodes.INVOKEVIRTUAL;
-        }
-        // Invoke method
-        visitor.visitMethodInsn(opcode,
-                data.owner.getInternalName(),
-                data.methodName,
-                data.getDescriptor(),
-                data.isInterface);
-        // Generate ret value
-        Type returnType = data.returnType;
-        if (returnType.getDescriptor().equals(VOID)) {
-            visitor.visitInsn(Opcodes.ACONST_NULL);
-        } else {
-            packPrimitive(visitor, returnType);
-        }
-        visitor.visitInsn(Opcodes.ARETURN);
-    }
-
-    protected static void createStaticMethod(ClassWriter writer, MethodData data) {
-        MethodVisitor call = writer.visitMethod(Opcodes.ACC_PUBLIC, METHOD, BOUND_DESCRIPTOR, null, EXCEPTIONS);
-        // Create arguments
-        prepareArguments(call, data.getArguments(), 1);
-        // Invoke method
-        invokeMethod(call, data);
-        call.visitMaxs(0, 0);
-        call.visitEnd();
-    }
-
     protected abstract void createConstructor(String owner, ClassWriter writer, Type source);
 
     protected abstract void createMethod(String owner, ClassWriter writer, MethodData data);
