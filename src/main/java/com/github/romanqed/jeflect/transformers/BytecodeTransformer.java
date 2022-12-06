@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 
 public final class BytecodeTransformer extends CheckedTransformer {
-    private static final int DEFAULT_READER_OPTIONS = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
+    private static final int DEFAULT_READER_OPTIONS = ClassReader.SKIP_FRAMES;
     private static final int DEFAULT_WRITER_OPTIONS = ClassWriter.COMPUTE_FRAMES;
     private final int readerOptions;
     private final int writerOptions;
