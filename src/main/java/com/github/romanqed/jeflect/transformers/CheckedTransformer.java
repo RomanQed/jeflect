@@ -22,7 +22,7 @@ public abstract class CheckedTransformer implements ClassFileTransformer {
 
     public synchronized void validate() {
         if (!problems.isEmpty()) {
-            throw new ClassTransformerException(problems);
+            throw new ClassTransformException(problems);
         }
         this.problems = Collections.synchronizedList(supplier.get());
     }
