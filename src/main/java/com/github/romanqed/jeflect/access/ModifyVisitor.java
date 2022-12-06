@@ -1,6 +1,5 @@
 package com.github.romanqed.jeflect.access;
 
-import com.github.romanqed.jeflect.AsmUtil;
 import com.github.romanqed.jeflect.ByteField;
 import com.github.romanqed.jeflect.ByteMethod;
 import org.objectweb.asm.ClassVisitor;
@@ -36,26 +35,20 @@ final class ModifyVisitor extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         if (this.name.equals(name)) {
-            access = AsmUtil.resetAccess(access) | this.access;
+            access = this.access;
         }
         super.visit(version, access, name, signature, superName, interfaces);
     }
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        Integer found = methods.get(name + descriptor);
-        if (found != null) {
-            access = AsmUtil.resetAccess(access) | found;
-        }
+        access = methods.getOrDefault(name + descriptor, access);
         return super.visitMethod(access, name, descriptor, signature, exceptions);
     }
 
     @Override
     public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-        Integer found = fields.get(name + descriptor);
-        if (found != null) {
-            access = AsmUtil.resetAccess(access) | found;
-        }
+        access = fields.getOrDefault(name + descriptor, access);
         return super.visitField(access, name, descriptor, signature, value);
     }
 }

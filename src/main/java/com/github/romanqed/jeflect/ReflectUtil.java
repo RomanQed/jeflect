@@ -117,6 +117,16 @@ public final class ReflectUtil {
         return LAMBDA_FACTORY.packMethod(method);
     }
 
+    /**
+     * Packages the passed constructor into a {@link Lambda}.
+     *
+     * @param constructor constructor for packaging
+     * @return the object instantiating the {@link Lambda}
+     */
+    public static Lambda packConstructor(Constructor<?> constructor) {
+        return LAMBDA_FACTORY.packConstructor(constructor);
+    }
+
     @SuppressWarnings("unchecked")
     public static <R> Callable<R> packConstructor(Class<R> clazz) throws Throwable {
         Constructor<R> toPack = clazz.getDeclaredConstructor();

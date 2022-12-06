@@ -41,7 +41,7 @@ public final class TransformAccessor implements Accessor {
         try {
             loader.run();
         } catch (Throwable e) {
-            throw new IllegalStateException("Cannot setAccess class due to", e);
+            throw new IllegalStateException("Cannot set class access due to", e);
         } finally {
             instrumentation.removeTransformer(transformer);
         }
@@ -61,7 +61,7 @@ public final class TransformAccessor implements Accessor {
                                    ByteClass byteClass,
                                    ProtectionDomain domain,
                                    byte[] classFileBuffer) {
-            Modifier modifier = new Modifier();
+            ModifierImpl modifier = new ModifierImpl();
             consumer.accept(modifier, byteClass);
             Function<ClassVisitor, ModifyVisitor> provider = modifier.provider;
             if (provider == null) {
@@ -75,7 +75,7 @@ public final class TransformAccessor implements Accessor {
         }
     }
 
-    private static final class Modifier implements AccessModifier {
+    private static final class ModifierImpl implements AccessModifier {
         private Function<ClassVisitor, ModifyVisitor> provider;
 
         @Override
@@ -94,7 +94,8 @@ public final class TransformAccessor implements Accessor {
         @Override
         public synchronized void setAccess(ByteMethod method, int access) {
             if (provider == null) {
-                setAccess(method.getDeclaringClass(), 0);
+                ByteClass owner = method.getDeclaringClass();
+                setAccess(owner, owner.getModifiers());
             }
             modify(method, provider, access);
         }
@@ -110,7 +111,8 @@ public final class TransformAccessor implements Accessor {
         @Override
         public synchronized void setAccess(ByteField field, int access) {
             if (provider == null) {
-                setAccess(field.getDeclaringClass(), 0);
+                ByteClass owner = field.getDeclaringClass();
+                setAccess(owner, owner.getModifiers());
             }
             modify(field, provider, access);
         }
