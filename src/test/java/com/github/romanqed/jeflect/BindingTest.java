@@ -1,9 +1,9 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.binding.BindName;
-import com.github.romanqed.jeflect.binding.BindingFactory;
-import com.github.romanqed.jeflect.binding.InterfaceType;
-import com.github.romanqed.jeflect.binding.Overridable;
+import com.github.romanqed.jeflect.legacy.binding.BindName;
+import com.github.romanqed.jeflect.legacy.binding.BindingFactory;
+import com.github.romanqed.jeflect.legacy.binding.InterfaceType;
+import com.github.romanqed.jeflect.legacy.binding.Overridable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

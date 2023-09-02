@@ -40,7 +40,7 @@ dependencies {
 ### Packaging of the method using meta-lambdas
 
 ```Java
-import com.github.romanqed.jeflect.ReflectUtil;
+import com.github.romanqed.jeflect.legacy.ReflectUtil;
 
 import java.util.concurrent.Callable;
 
@@ -62,8 +62,8 @@ public class Main {
 ### Packaging of the method using proxy
 
 ```Java
-import com.github.romanqed.jeflect.lambdas.Lambda;
-import com.github.romanqed.jeflect.ReflectUtil;
+import com.github.romanqed.jeflect.legacy.lambdas.Lambda;
+import com.github.romanqed.jeflect.legacy.ReflectUtil;
 
 import java.lang.reflect.Method;
 
@@ -86,8 +86,8 @@ public class Main {
 ### Packaging of the method using custom lambda
 
 ```Java
-import com.github.romanqed.jeflect.ReflectUtil;
-import com.github.romanqed.jeflect.meta.LambdaType;
+import com.github.romanqed.jeflect.legacy.ReflectUtil;
+import com.github.romanqed.jeflect.legacy.meta.LambdaType;
 
 import java.lang.reflect.Method;
 
@@ -113,8 +113,8 @@ public class Main {
 ### Packaging of the method using not bound lambda
 
 ```Java
-import com.github.romanqed.jeflect.lambdas.Lambda;
-import com.github.romanqed.jeflect.ReflectUtil;
+import com.github.romanqed.jeflect.legacy.lambdas.Lambda;
+import com.github.romanqed.jeflect.legacy.ReflectUtil;
 
 import java.lang.reflect.Method;
 

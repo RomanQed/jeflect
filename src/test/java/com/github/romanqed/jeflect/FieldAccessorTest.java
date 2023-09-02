@@ -1,7 +1,7 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.fields.FieldAccessor;
-import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
+import com.github.romanqed.jeflect.legacy.fields.FieldAccessor;
+import com.github.romanqed.jeflect.legacy.fields.FieldAccessorFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

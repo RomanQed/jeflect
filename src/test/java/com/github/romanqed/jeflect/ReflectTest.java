@@ -1,7 +1,8 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.parsers.AsmClassFileParser;
-import com.github.romanqed.jeflect.parsers.ClassFileParser;
+import com.github.romanqed.jeflect.legacy.*;
+import com.github.romanqed.jeflect.legacy.parsers.AsmClassFileParser;
+import com.github.romanqed.jeflect.legacy.parsers.ClassFileParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Type;
