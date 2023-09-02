@@ -1,6 +1,6 @@
 package com.github.romanqed.jeflect.legacy.fields;
 
-import com.github.romanqed.jeflect.legacy.AsmUtil;
+import com.github.romanqed.jeflect.AsmUtil;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;

@@ -1,27 +1,29 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.legacy.*;
-import com.github.romanqed.jeflect.legacy.parsers.AsmClassFileParser;
-import com.github.romanqed.jeflect.legacy.parsers.ClassFileParser;
+import com.github.romanqed.jeflect.parsers.AsmClassFileParser;
+import com.github.romanqed.jeflect.parsers.ClassFileParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Type;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class ReflectTest extends Assertions {
     private static final ClassFileParser PARSER = new AsmClassFileParser();
 
     private static byte[] getByteCode(Class<?> clazz) {
-        String resource = clazz.getName().replace('.', '/') + ".class";
-        InputStream stream = clazz.getClassLoader().getResourceAsStream(resource);
+        var resource = clazz.getName().replace('.', '/') + ".class";
+        var stream = clazz.getClassLoader().getResourceAsStream(resource);
+        Objects.requireNonNull(stream);
         try {
-            byte[] ret = new byte[stream.available()];
-            stream.read(ret);
+            var ret = new byte[stream.available()];
+            if (stream.read(ret) == -1) {
+                throw new IOException("Cannot read classfile");
+            }
             stream.close();
             return ret;
         } catch (IOException e) {
@@ -55,8 +57,8 @@ public class ReflectTest extends Assertions {
     }
 
     public void assertMethod(Method method, ByteMethod byteMethod) {
-        Object[] exceptionTypes = byteMethod.getExceptionTypes().stream().map(LazyType::getType).toArray();
-        Object[] parameterTypes = byteMethod.getParameters().stream().map(ByteParameter::getType).toArray();
+        var exceptionTypes = byteMethod.getExceptionTypes().stream().map(LazyType::getType).toArray();
+        var parameterTypes = byteMethod.getParameters().stream().map(ByteParameter::getType).toArray();
         assertAll(
                 () -> assertEquals(method.getName(), byteMethod.getName()),
                 () -> assertEquals(method.getDeclaringClass(), byteMethod.getDeclaringClass().getType().getType()),
@@ -69,8 +71,8 @@ public class ReflectTest extends Assertions {
     }
 
     public void assertConstructor(Constructor<?> constructor, ByteMethod byteConstructor) {
-        Object[] exceptionTypes = byteConstructor.getExceptionTypes().stream().map(LazyType::getType).toArray();
-        Object[] parameterTypes = byteConstructor.getParameters().stream().map(ByteParameter::getType).toArray();
+        var exceptionTypes = byteConstructor.getExceptionTypes().stream().map(LazyType::getType).toArray();
+        var parameterTypes = byteConstructor.getParameters().stream().map(ByteParameter::getType).toArray();
         assertAll(
                 () -> assertEquals("<init>", byteConstructor.getName()),
                 () -> assertEquals(void.class, byteConstructor.getReturnType().getType()),
@@ -84,9 +86,9 @@ public class ReflectTest extends Assertions {
 
     @Test
     public void testReflect() throws Exception {
-        Class<?> clazz = Sample.class;
+        var clazz = Sample.class;
         // Parse bytecode
-        ByteClass byteClass = PARSER.parse(getByteCode(Sample.class));
+        var byteClass = PARSER.parse(getByteCode(Sample.class));
         // Assert clazz name, type and annotation
         assertEquals(clazz.getName(), byteClass.getName());
         assertEquals(clazz, byteClass.getType().getType());
@@ -97,14 +99,14 @@ public class ReflectTest extends Assertions {
 
         // Assert fields
         // Descriptors
-        String aDescriptor = Type.getDescriptor(A.class);
-        String stringDescriptor = Type.getDescriptor(String.class);
-        String intDescriptor = Type.getDescriptor(int.class);
+        var aDescriptor = Type.getDescriptor(A.class);
+        var stringDescriptor = Type.getDescriptor(String.class);
+        var intDescriptor = Type.getDescriptor(int.class);
         // Check annotation on first field
-        ByteField field = byteClass.getField("field", aDescriptor);
+        var field = byteClass.getField("field", aDescriptor);
         assertAnnotation(field.getAnnotation(B.class));
         // Check field value
-        ByteField field2 = byteClass.getField("field2", intDescriptor);
+        var field2 = byteClass.getField("field2", intDescriptor);
         assertEquals(190, field2.getValue());
         // Assertions
         assertField(clazz.getDeclaredField("field"), field);
@@ -113,14 +115,14 @@ public class ReflectTest extends Assertions {
 
         // Assert methods
         // Default reflection
-        Method method1 = clazz.getDeclaredMethod("getField");
-        Method method2 = clazz.getDeclaredMethod("getField1");
-        Method method3 = clazz.getDeclaredMethod("test", A.class, int.class);
+        var method1 = clazz.getDeclaredMethod("getField");
+        var method2 = clazz.getDeclaredMethod("getField1");
+        var method3 = clazz.getDeclaredMethod("test", A.class, int.class);
         // Check annotation on getField method
-        ByteMethod getField = byteClass.getMethod("getField", Type.getMethodDescriptor(method1));
+        var getField = byteClass.getMethod("getField", Type.getMethodDescriptor(method1));
         assertAnnotation(getField.getAnnotation(B.class));
         // Check parameter annotation on test method
-        ByteMethod test = byteClass.getMethod("test", Type.getMethodDescriptor(method3));
+        var test = byteClass.getMethod("test", Type.getMethodDescriptor(method3));
         assertAnnotation(test.getParameters().get(1).getAnnotation(B.class));
         // Assertions
         assertMethod(method1, getField);
@@ -129,7 +131,7 @@ public class ReflectTest extends Assertions {
 
         // Assert constructors
         // Check annotation
-        ByteMethod ctor = byteClass.getMethod("<init>", "()V");
+        var ctor = byteClass.getMethod("<init>", "()V");
         assertAnnotation(ctor.getAnnotation(B.class));
         // Assertion
         assertConstructor(clazz.getDeclaredConstructor(), ctor);

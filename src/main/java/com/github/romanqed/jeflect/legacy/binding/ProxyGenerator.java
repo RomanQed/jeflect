@@ -1,7 +1,7 @@
 package com.github.romanqed.jeflect.legacy.binding;
 
-import com.github.romanqed.jeflect.legacy.AsmUtil;
-import com.github.romanqed.jeflect.legacy.Variable;
+import com.github.romanqed.jeflect.AsmUtil;
+import com.github.romanqed.jeflect.Variable;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.romanqed.jeflect.legacy.AsmUtil.INTERNAL_OBJECT_NAME;
+import static com.github.romanqed.jeflect.AsmUtil.INTERNAL_OBJECT_NAME;
 import static com.github.romanqed.jeflect.legacy.binding.Util.FIELD_NAME;
 
 final class ProxyGenerator {

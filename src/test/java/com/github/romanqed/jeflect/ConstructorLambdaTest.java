@@ -1,7 +1,6 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.legacy.lambdas.Lambda;
-import com.github.romanqed.jeflect.legacy.lambdas.LambdaFactory;
+import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -10,29 +9,29 @@ public class ConstructorLambdaTest extends Assertions {
 
     @Test
     public void testEmptyConstructor() throws Throwable {
-        Lambda packed = FACTORY.packConstructor(A.class.getDeclaredConstructor());
-        A a = (A) packed.call();
+        var packed = FACTORY.packConstructor(A.class.getDeclaredConstructor());
+        var a = (A) packed.invoke();
         assertEquals(10, a.a);
     }
 
     @Test
     public void testOneArgumentConstructor() throws Throwable {
-        Lambda packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(int.class));
-        A a = (A) packed.call(new Object[]{1});
+        var packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(int.class));
+        var a = (A) packed.invoke(new Object[]{1});
         assertEquals(1, a.a);
     }
 
     @Test
     public void testMultiArgumentConstructor() throws Throwable {
-        Lambda packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(int.class, int.class));
-        A a = (A) packed.call(new Object[]{5, 6});
+        var packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(int.class, int.class));
+        var a = (A) packed.invoke(new Object[]{5, 6});
         assertEquals(11, a.a);
     }
 
     @Test
     public void testConstructorWithException() throws Throwable {
-        Lambda packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(String.class));
-        assertThrowsExactly(Exception.class, () -> packed.call(new Object[]{""}));
+        var packed = FACTORY.packConstructor(A.class.getDeclaredConstructor(String.class));
+        assertThrowsExactly(Exception.class, () -> packed.invoke(new Object[]{""}));
     }
 
     public static class A {

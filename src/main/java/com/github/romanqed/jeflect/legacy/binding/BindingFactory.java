@@ -1,7 +1,7 @@
 package com.github.romanqed.jeflect.legacy.binding;
 
-import com.github.romanqed.jeflect.legacy.DefineClassLoader;
-import com.github.romanqed.jeflect.legacy.DefineLoader;
+import com.github.romanqed.jeflect.DefineClassLoader;
+import com.github.romanqed.jeflect.DefineLoader;
 
 import java.lang.reflect.Modifier;
 import java.util.Objects;
