@@ -14,22 +14,20 @@ public interface FieldAccessor {
      * Gets the value of the virtual field. The primitives will be packed.
      *
      * @param object instance of the class declaring the field
-     * @param <T>    the type to which the field value will be cast
      * @return field value
      * @throws UnsupportedOperationException if packed field is not virtual
      */
-    default <T> T get(Object object) {
+    default Object get(Object object) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Gets the value of the static field. The primitives will be packed.
      *
-     * @param <T> the type to which the field value will be cast
      * @return field value
      * @throws UnsupportedOperationException if packed field is not static
      */
-    default <T> T get() {
+    default Object get() {
         throw new UnsupportedOperationException();
     }
 

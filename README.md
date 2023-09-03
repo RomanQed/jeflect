@@ -6,14 +6,17 @@ A set of utilities designed to interact with reflection and speed up it.
 
 To install it, you will need:
 
-* java 8+
+* java 11+
 * Maven/Gradle
 
 ### Features
 
 * Getting values from annotations
-* Packaging methods using a proxy
+* Parsing bytecode classes
+* Transforming loaded classes
+* Packaging methods using a universal proxy lambdas
 * Packaging methods with meta-lambdas
+* Packaging fields with proxy accessor
 
 ## Installing
 
@@ -37,96 +40,83 @@ dependencies {
 
 ## Examples
 
-### Packaging of the method using meta-lambdas
+### Field accessor
 
 ```Java
-import com.github.romanqed.jeflect.legacy.ReflectUtil;
+package com.github.romanqed.jeflect;
 
-import java.util.concurrent.Callable;
-
-public class Main {
-    public static void main(String[] args) throws Throwable {
-        Callable<String> packed = ReflectUtil.packCallable(ToPack.class.getMethod("packMe"), new ToPack());
-        System.out.println(packed.call());
-    }
-
-    public static class ToPack {
-        public String packMe() {
-            return "Hello, I'm packed!";
-        }
-    }
-}
-
-```
-
-### Packaging of the method using proxy
-
-```Java
-import com.github.romanqed.jeflect.legacy.lambdas.Lambda;
-import com.github.romanqed.jeflect.legacy.ReflectUtil;
-
-import java.lang.reflect.Method;
+import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
 
 public class Main {
-    public static void main(String[] args) throws Throwable {
-        ToPack toPack = new ToPack();
-        Method method = ToPack.class.getDeclaredMethod("packMe");
-        Lambda packed = ReflectUtil.packMethod(method, new ToPack());
-        System.out.println(packed.call(new Object[0]));
-    }
+    public static final String README = "ярусский ^_^";
 
-    public static class ToPack {
-        public String packMe() {
-            return "Hello, I'm packed!";
-        }
+    public static void main(String[] args) throws Exception {
+        // So, we need to access field by name
+        // How can we do this?
+        var field = Main.class.getField("README");
+        // Default, very slow, built-in reflection way
+        System.out.println(field.get(null)); // <-- Very bad choice to use it during active calculating
+        // A wonderful, ultra-fast, shining way with field accessor
+        var factory = new FieldAccessorFactory();
+        var accessor = factory.packField(field); // <-- This action takes a long time, do this only once
+        System.out.println(accessor.get()); // <-- This action is performed as fast as a normal field access
     }
 }
 ```
 
-### Packaging of the method using custom lambda
+### Lambdas
 
 ```Java
-import com.github.romanqed.jeflect.legacy.ReflectUtil;
-import com.github.romanqed.jeflect.legacy.meta.LambdaType;
+package com.github.romanqed.jeflect;
 
-import java.lang.reflect.Method;
+import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 
 public class Main {
     public static void main(String[] args) throws Throwable {
-        LambdaType<MyLambda> clazz = LambdaType.fromClass(MyLambda.class);
-        Main main = new Main();
-        Method method = Main.class.getDeclaredMethod("toPack", int.class);
-        MyLambda lambda = ReflectUtil.packLambdaMethod(clazz, method, main);
-        System.out.println(lambda.increment(0));
+        // So, we need to invoke method by name
+        // How can we do this?
+        var method = Main.class.getMethod("callMe", int.class, int.class, int.class);
+        var params = new Object[]{1, 2, 3};
+        // Default, very slow, built-in reflection way
+        method.invoke(null, params); // <-- Very bad choice to use it during active calculating
+        // A wonderful, ultra-fast, shining way with proxy lambdas (not so fast as meta-lambdas, but more universal)
+        var factory = new LambdaFactory();
+        var lambda = factory.packMethod(method); // <-- This action takes a long time, do this only once
+        lambda.invoke(params); // <-- This action is performed as fast as a normal method call
     }
 
-    public int toPack(int number) {
-        return number + 1;
-    }
-
-    public interface MyLambda {
-        int increment(int number);
+    public static void callMe(int first, int second, int third) {
+        System.out.println("Hello, i am very useful method, i can sum your numbers: " + (first + second + third));
     }
 }
 ```
 
-### Packaging of the method using not bound lambda
+### Meta lambdas
 
 ```Java
-import com.github.romanqed.jeflect.legacy.lambdas.Lambda;
-import com.github.romanqed.jeflect.legacy.ReflectUtil;
+package com.github.romanqed.jeflect;
 
-import java.lang.reflect.Method;
+import com.github.romanqed.jeflect.meta.LambdaType;
+import com.github.romanqed.jeflect.meta.MetaFactory;
+
+import java.lang.invoke.MethodHandles;
 
 public class Main {
-    public static void main(String[] args) throws Throwable {
-        Method method = Main.class.getDeclaredMethod("toPack", int.class);
-        Lambda lambda = ReflectUtil.packMethod(method);
-        System.out.println(lambda.call(new Main(), new Object[]{0}));
+    public static void main(String[] args) throws Exception {
+        // So, we need to invoke method by name
+        // How can we do this?
+        var method = Main.class.getMethod("callMe");
+        // Default, very slow, built-in reflection way
+        method.invoke(null); // <-- Very bad choice to use it during active calculating
+        // A wonderful, ultra-fast, shining way with meta-lambdas
+        var factory = new MetaFactory(MethodHandles.lookup());
+        var type = LambdaType.fromClass(Runnable.class);
+        var runnable = factory.packLambdaMethod(type, method); // <-- This action takes a long time, do this only once
+        runnable.run(); // <-- This action is performed as fast as a normal method call
     }
 
-    public int toPack(int number) {
-        return number + 1;
+    public static void callMe() {
+        System.out.println("Hello, i am very useful method");
     }
 }
 ```
