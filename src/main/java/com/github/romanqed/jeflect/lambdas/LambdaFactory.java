@@ -2,22 +2,27 @@ package com.github.romanqed.jeflect.lambdas;
 
 import com.github.romanqed.jeflect.DefineClassLoader;
 import com.github.romanqed.jeflect.DefineLoader;
+import com.github.romanqed.jeflect.DefineObjectFactory;
+import com.github.romanqed.jeflect.ObjectFactory;
 import org.objectweb.asm.Type;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 
 /**
  * A factory that generates the bytecode of a proxy class for methods and constructors.
  */
 public final class LambdaFactory {
     private static final String PROXY = "Proxy";
-    private final DefineLoader loader;
+    private final ObjectFactory<Lambda> factory;
+
+    public LambdaFactory(ObjectFactory<Lambda> factory) {
+        this.factory = Objects.requireNonNull(factory);
+    }
 
     public LambdaFactory(DefineLoader loader) {
-        this.loader = Objects.requireNonNull(loader);
+        this(new DefineObjectFactory<>(loader));
     }
 
     public LambdaFactory() {
@@ -35,31 +40,14 @@ public final class LambdaFactory {
     }
 
     /**
-     * @return {@link DefineLoader} instance, which is used to define proxies
-     */
-    public DefineLoader getLoader() {
-        return loader;
-    }
-
-    private Lambda pack(String name, Callable<byte[]> provider) throws Exception {
-        var clazz = this.loader.load(name);
-        if (clazz == null) {
-            var bytes = provider.call();
-            clazz = this.loader.define(name, bytes);
-        }
-        return (Lambda) clazz.getDeclaredConstructor().newInstance();
-    }
-
-    /**
      * Creates a proxy implementation of the {@link Lambda} interface for the specified method.
      *
      * @param method the target method
      * @return object of the generated proxy class implementing the {@link Lambda} interface
-     * @throws Exception if errors occur during proxy class generation or instantiation
      */
-    public Lambda packMethod(Method method) throws Exception {
+    public Lambda packMethod(Method method) {
         var name = getProxyName(method);
-        return pack(name, () -> ProxyUtil.createProxy(name, method));
+        return factory.create(name, () -> ProxyUtil.createProxy(name, method));
     }
 
     /**
@@ -67,10 +55,9 @@ public final class LambdaFactory {
      *
      * @param constructor the target constructor
      * @return object of the generated proxy class implementing the {@link Lambda} interface
-     * @throws Exception if errors occur during proxy class generation or instantiation
      */
-    public Lambda packConstructor(Constructor<?> constructor) throws Exception {
+    public Lambda packConstructor(Constructor<?> constructor) {
         var name = getProxyName(constructor);
-        return pack(name, () -> ProxyUtil.createProxy(name, constructor));
+        return factory.create(name, () -> ProxyUtil.createProxy(name, constructor));
     }
 }

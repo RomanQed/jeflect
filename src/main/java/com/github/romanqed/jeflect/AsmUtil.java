@@ -15,12 +15,8 @@ public final class AsmUtil {
     public static final String EMPTY_DESCRIPTOR = "()V";
     // Type constants
     public static final Type OBJECT = Type.getType(Object.class);
-    public static final String INTERNAL_OBJECT_NAME = OBJECT.getInternalName();
     public static final Map<Type, Type> PRIMITIVES = getPrimitives();
     public static final Map<Type, String> PRIMITIVE_METHODS = getPrimitiveMethods();
-    // Private constants
-    static final int FIELD_ACCESS = Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL;
-
 
     private static Map<Type, Type> getPrimitives() {
         return Map.of(
@@ -92,7 +88,11 @@ public final class AsmUtil {
             return;
         }
         var descriptor = Type.getMethodDescriptor(wrap, primitive);
-        visitor.visitMethodInsn(Opcodes.INVOKESTATIC, wrap.getInternalName(), "valueOf", descriptor, false);
+        visitor.visitMethodInsn(Opcodes.INVOKESTATIC,
+                wrap.getInternalName(),
+                "valueOf",
+                descriptor,
+                false);
     }
 
     /**
@@ -154,12 +154,16 @@ public final class AsmUtil {
      * @param superClass class parent
      */
     public static void createEmptyConstructor(ClassWriter writer, String superClass) {
-        var init = writer.visitMethod(Opcodes.ACC_PUBLIC, INIT, EMPTY_DESCRIPTOR, null, null);
+        var init = writer.visitMethod(Opcodes.ACC_PUBLIC,
+                INIT,
+                EMPTY_DESCRIPTOR,
+                null,
+                null);
         init.visitCode();
         init.visitVarInsn(Opcodes.ALOAD, 0);
         init.visitMethodInsn(Opcodes.INVOKESPECIAL, superClass, INIT, EMPTY_DESCRIPTOR, false);
         init.visitInsn(Opcodes.RETURN);
-        init.visitMaxs(0, 0);
+        init.visitMaxs(1, 1);
         init.visitEnd();
     }
 
@@ -169,56 +173,6 @@ public final class AsmUtil {
      * @param writer {@link ClassWriter} containing the class in which the constructor will be created
      */
     public static void createEmptyConstructor(ClassWriter writer) {
-        createEmptyConstructor(writer, INTERNAL_OBJECT_NAME);
-    }
-
-    /**
-     * Creates a constructor containing N arguments and assigns these arguments to the appropriate fields.
-     *
-     * @param writer     {@link ClassWriter} containing the class in which the constructor will be created
-     * @param superClass class parent
-     * @param owner      class internal name
-     * @param variables  constructor arguments
-     */
-    public static void createConstructor(ClassWriter writer, String superClass, String owner, Variable... variables) {
-        if (variables.length > 255) {
-            throw new IllegalStateException("The method cannot contain more than 255 arguments");
-        }
-        var types = new Type[variables.length];
-        // Generate fields and extracting types
-        for (int i = 0; i < types.length; ++i) {
-            var variable = variables[i];
-            types[i] = variable.getType();
-            writer
-                    .visitField(FIELD_ACCESS, variable.getName(), variable.getType().getDescriptor(), null, null)
-                    .visitEnd();
-        }
-        // Generate constructor header
-        var descriptor = Type.getMethodDescriptor(Type.VOID_TYPE, types);
-        var init = writer.visitMethod(Opcodes.ACC_PUBLIC, INIT, descriptor, null, null);
-        init.visitCode();
-        init.visitVarInsn(Opcodes.ALOAD, 0);
-        init.visitMethodInsn(Opcodes.INVOKESPECIAL, superClass, INIT, EMPTY_DESCRIPTOR, false);
-        // Set fields
-        init.visitVarInsn(Opcodes.ALOAD, 0);
-        for (var i = 0; i < variables.length; ++i) {
-            var variable = variables[i];
-            init.visitVarInsn(Opcodes.ALOAD, i + 1);
-            init.visitFieldInsn(Opcodes.PUTFIELD, owner, variable.getName(), variable.getType().getDescriptor());
-        }
-        init.visitInsn(Opcodes.RETURN);
-        init.visitMaxs(0, 0);
-        init.visitEnd();
-    }
-
-    /**
-     * Creates a constructor containing N arguments and assigns these arguments to the appropriate fields.
-     *
-     * @param writer    {@link ClassWriter} containing the class in which the constructor will be created
-     * @param owner     class internal name
-     * @param variables constructor arguments
-     */
-    public static void createConstructor(ClassWriter writer, String owner, Variable... variables) {
-        createConstructor(writer, INTERNAL_OBJECT_NAME, owner, variables);
+        createEmptyConstructor(writer, OBJECT.getInternalName());
     }
 }

@@ -34,12 +34,16 @@ public final class MetaFactory {
      *
      * @param method method for extraction
      * @return extracted type
-     * @throws IllegalAccessException if it couldn't access the method
+     * @throws RuntimeException if it couldn't access the method
      */
-    public MethodType extractType(Method method) throws IllegalAccessException {
-        Objects.requireNonNull(method);
-        var handle = lookup.unreflect(method);
-        return handle.type();
+    public MethodType extractType(Method method) {
+        try {
+            Objects.requireNonNull(method);
+            var handle = lookup.unreflect(method);
+            return handle.type();
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -47,9 +51,8 @@ public final class MetaFactory {
      *
      * @param method method for extraction
      * @return extracted type
-     * @throws IllegalAccessException if it couldn't access the method
      */
-    public MethodType extractDynamicType(Method method) throws IllegalAccessException {
+    public MethodType extractDynamicType(Method method) {
         return extractType(method).dropParameterTypes(0, 1);
     }
 
@@ -62,10 +65,10 @@ public final class MetaFactory {
      *               (if null, the method will be considered static)
      * @param <T>    type of packing lambda
      * @return the object instantiating the passed lambda
-     * @throws Throwable if any errors occurred during the packaging process
+     * @throws RuntimeException if any errors occurred during the packaging process
      */
     @SuppressWarnings("unchecked")
-    public <T> T packLambdaHandle(LambdaType<T> clazz, MethodHandle handle, Object bind) throws Throwable {
+    public <T> T packLambdaHandle(LambdaType<T> clazz, MethodHandle handle, Object bind) {
         Objects.requireNonNull(clazz);
         var lambdaMethod = clazz.getLambdaMethod();
         var lambdaType = extractDynamicType(lambdaMethod);
@@ -75,16 +78,20 @@ public final class MetaFactory {
             bindType = bindType.appendParameterTypes(bind.getClass());
             sourceType = sourceType.dropParameterTypes(0, 1);
         }
-        var callSite = LambdaMetafactory.metafactory(
-                lookup,
-                lambdaMethod.getName(),
-                bindType,
-                lambdaType,
-                handle,
-                sourceType
-        );
-        var ret = bind == null ? callSite.getTarget() : callSite.getTarget().bindTo(bind);
-        return (T) ret.invoke();
+        try {
+            var callSite = LambdaMetafactory.metafactory(
+                    lookup,
+                    lambdaMethod.getName(),
+                    bindType,
+                    lambdaType,
+                    handle,
+                    sourceType
+            );
+            var ret = bind == null ? callSite.getTarget() : callSite.getTarget().bindTo(bind);
+            return (T) ret.invoke();
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -96,12 +103,16 @@ public final class MetaFactory {
      *               (if null, the method will be considered static)
      * @param <T>    type of packing lambda
      * @return the object instantiating the passed lambda
-     * @throws Throwable if any errors occurred during the packaging process
+     * @throws RuntimeException if any errors occurred during the packaging process
      */
-    public <T> T packLambdaMethod(LambdaType<T> clazz, Method method, Object bind) throws Throwable {
+    public <T> T packLambdaMethod(LambdaType<T> clazz, Method method, Object bind) {
         Objects.requireNonNull(method);
-        var handle = lookup.unreflect(method);
-        return packLambdaHandle(clazz, handle, bind);
+        try {
+            var handle = lookup.unreflect(method);
+            return packLambdaHandle(clazz, handle, bind);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -111,12 +122,16 @@ public final class MetaFactory {
      * @param constructor constructor for packaging
      * @param <T>         type of packing lambda
      * @return the object instantiating the passed lambda
-     * @throws Throwable if any errors occurred during the packaging process
+     * @throws RuntimeException if any errors occurred during the packaging process
      */
-    public <T> T packLambdaConstructor(LambdaType<T> clazz, Constructor<?> constructor) throws Throwable {
+    public <T> T packLambdaConstructor(LambdaType<T> clazz, Constructor<?> constructor) {
         Objects.requireNonNull(constructor);
-        var handle = lookup.unreflectConstructor(constructor);
-        return packLambdaHandle(clazz, handle, null);
+        try {
+            var handle = lookup.unreflectConstructor(constructor);
+            return packLambdaHandle(clazz, handle, null);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -126,9 +141,8 @@ public final class MetaFactory {
      * @param method method for packaging
      * @param <T>    type of packing lambda
      * @return the object instantiating the passed lambda
-     * @throws Throwable if any errors occurred during the packaging process
      */
-    public <T> T packLambdaMethod(LambdaType<T> clazz, Method method) throws Throwable {
+    public <T> T packLambdaMethod(LambdaType<T> clazz, Method method) {
         return packLambdaMethod(clazz, method, null);
     }
 }

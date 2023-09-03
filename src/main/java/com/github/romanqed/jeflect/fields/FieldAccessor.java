@@ -1,4 +1,4 @@
-package com.github.romanqed.jeflect.legacy.fields;
+package com.github.romanqed.jeflect.fields;
 
 /**
  * <p>A class representing a universal interface for accessing a field.
@@ -35,6 +35,7 @@ public interface FieldAccessor {
 
     /**
      * Sets the value of the virtual field. The primitives will be unpacked.
+     * Maybe unimplemented if the target field is final.
      *
      * @param object instance of the class declaring the field
      * @param value  the value to be assigned
@@ -46,6 +47,7 @@ public interface FieldAccessor {
 
     /**
      * Sets the value of the static field. The primitives will be unpacked.
+     * Maybe unimplemented if the target field is final.
      *
      * @param value the value to be assigned
      * @throws UnsupportedOperationException if packed field is not static

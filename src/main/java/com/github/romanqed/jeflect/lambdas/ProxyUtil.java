@@ -1,6 +1,7 @@
 package com.github.romanqed.jeflect.lambdas;
 
 import com.github.romanqed.jeflect.AsmUtil;
+import com.github.romanqed.jfunc.Exceptions;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -12,16 +13,10 @@ import java.lang.reflect.Modifier;
 import java.util.function.Consumer;
 
 final class ProxyUtil {
-    private static final Type OBJECT_TYPE = Type.getType(Object.class);
-    private static final String OBJECT_NAME = Type.getInternalName(Object.class);
-    private static final String METHOD_NAME = "invoke";
-    private static final String METHOD_DESCRIPTOR = Type.getMethodDescriptor(
-            OBJECT_TYPE,
-            OBJECT_TYPE,
-            Type.getType(Object[].class)
+    private static final Class<Lambda> LAMBDA = Lambda.class;
+    private static final Method METHOD = Exceptions.suppress(
+            () -> LAMBDA.getDeclaredMethod("invoke", Object.class, Object[].class)
     );
-    private static final String LAMBDA_NAME = Type.getInternalName(Lambda.class);
-    private static final String THROWABLE_NAME = Type.getInternalName(Throwable.class);
 
     static byte[] createProxy(String name,
                               Class<?>[] parameters,
@@ -33,16 +28,16 @@ final class ProxyUtil {
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 name,
                 null,
-                OBJECT_NAME,
-                new String[]{LAMBDA_NAME});
+                Type.getInternalName(Object.class),
+                new String[]{Type.getInternalName(LAMBDA)});
         // Create empty constructor
         AsmUtil.createEmptyConstructor(writer);
         // Implement proxy method
         var visitor = writer.visitMethod(Opcodes.ACC_PUBLIC,
-                METHOD_NAME,
-                METHOD_DESCRIPTOR,
+                METHOD.getName(),
+                Type.getMethodDescriptor(METHOD),
                 null,
-                new String[]{THROWABLE_NAME});
+                new String[]{Type.getInternalName(Throwable.class)});
         visitor.visitCode();
         // Load executable owner
         loader.accept(visitor);

@@ -7,6 +7,7 @@ open module com.github.romanqed.jeflect {
     // Exports
     exports com.github.romanqed.jeflect;
     exports com.github.romanqed.jeflect.meta;
+    exports com.github.romanqed.jeflect.fields;
     exports com.github.romanqed.jeflect.lambdas;
     exports com.github.romanqed.jeflect.parsers;
     exports com.github.romanqed.jeflect.transformers;
