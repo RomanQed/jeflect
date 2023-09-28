@@ -97,6 +97,8 @@ final class FieldUtil {
         createGet(get, owner, field.getName(), type, isStatic);
         // Check if field is final
         if (Modifier.isFinal(modifiers)) {
+            // Close writer
+            writer.visitEnd();
             return writer.toByteArray();
         }
         // Implement set method
@@ -107,6 +109,8 @@ final class FieldUtil {
                 null,
                 null);
         createSet(set, owner, field.getName(), type, isStatic);
+        // Close writer
+        writer.visitEnd();
         return writer.toByteArray();
     }
 }

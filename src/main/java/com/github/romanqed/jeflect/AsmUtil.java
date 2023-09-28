@@ -175,4 +175,103 @@ public final class AsmUtil {
     public static void createEmptyConstructor(ClassWriter writer) {
         createEmptyConstructor(writer, OBJECT.getInternalName());
     }
+
+    /**
+     * Puts an int scalar on the stack, using, if possible, the most optimal method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param value   int value
+     */
+    public static void pushInt(MethodVisitor visitor, int value) {
+        if (value >= -1 && value <= 5) {
+            visitor.visitInsn(Opcodes.ICONST_M1 + value + 1);
+            return;
+        }
+        if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+            visitor.visitIntInsn(Opcodes.BIPUSH, value);
+            return;
+        }
+        if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+            visitor.visitIntInsn(Opcodes.SIPUSH, value);
+            return;
+        }
+        visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Puts a long scalar on the stack, using, if possible, the most optimal method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param value   long value
+     */
+    public static void pushLong(MethodVisitor visitor, long value) {
+        if (value >= 0 && value <= 1) {
+            visitor.visitInsn(Opcodes.LCONST_0 + (int) value);
+            return;
+        }
+        visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Puts a float scalar on the stack, using, if possible, the most optimal method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param value   float value
+     */
+    public static void pushFloat(MethodVisitor visitor, float value) {
+        if (value > -1 && value < 3) {
+            visitor.visitInsn(Opcodes.FCONST_0 + (int) value);
+            return;
+        }
+        visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Puts a double scalar on the stack, using, if possible, the most optimal method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param value   double value
+     */
+    public static void pushDouble(MethodVisitor visitor, double value) {
+        if (value > -1 && value < 2) {
+            visitor.visitInsn(Opcodes.DCONST_0 + (int) value);
+            return;
+        }
+        visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Puts a constant on the stack, using the most optimal method if possible.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param value   constant value
+     */
+    public static void pushConstant(MethodVisitor visitor, Object value) {
+        if (value == null) {
+            visitor.visitInsn(Opcodes.ACONST_NULL);
+            return;
+        }
+        var type = value.getClass();
+        if (type == Character.class) {
+            pushInt(visitor, (Character) value);
+            return;
+        }
+        if (type == Integer.class) {
+            pushInt(visitor, (Integer) value);
+            return;
+        }
+        if (type == Long.class) {
+            pushLong(visitor, (Long) value);
+            return;
+        }
+        if (type == Float.class) {
+            pushFloat(visitor, (Float) value);
+            return;
+        }
+        if (type == Double.class) {
+            pushDouble(visitor, (Double) value);
+            return;
+        }
+        visitor.visitLdcInsn(value);
+    }
 }

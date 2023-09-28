@@ -11,7 +11,7 @@ To install it, you will need:
 
 ### Features
 
-* Getting values from annotations
+* Getting values from annotations by name
 * Parsing bytecode classes
 * Transforming loaded classes
 * Packaging methods using a universal proxy lambdas
@@ -124,11 +124,12 @@ public class Main {
 ## Built With
 
 * [Gradle](https://gradle.org) - Dependency management
-* [ASM](https://asm.ow2.io) - Generation of dynamic proxies.
+* [ASM](https://asm.ow2.io) - Generation of dynamic proxies
+* [jfunc](https://github.com/RomanQed/jfunc) - Lazy containers
 
 ## Authors
 
-* **RomanQed** - *Main work* - [RomanQed](https://github.com/RomanQed)
+* **[RomanQed](https://github.com/RomanQed)** - *Main work*
 
 See also the list of [contributors](https://github.com/RomanQed/jeflect/contributors)
 who participated in this project.

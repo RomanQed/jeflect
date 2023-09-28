@@ -47,7 +47,7 @@ final class ProxyUtil {
             // Load array containing params
             visitor.visitVarInsn(Opcodes.ALOAD, 2);
             // Push index to stack
-            // If it < 5, use const opcodes
+            // If it <= 5, use const opcodes
             if (index <= 5) {
                 visitor.visitInsn(index + Opcodes.ICONST_0);
             } else {
@@ -69,6 +69,8 @@ final class ProxyUtil {
         visitor.visitInsn(Opcodes.ARETURN);
         visitor.visitMaxs(0, 0);
         visitor.visitEnd();
+        // Close writer
+        writer.visitEnd();
         return writer.toByteArray();
     }
 
