@@ -219,8 +219,16 @@ public final class AsmUtil {
      * @param value   float value
      */
     public static void pushFloat(MethodVisitor visitor, float value) {
-        if (value > -1 && value < 3) {
-            visitor.visitInsn(Opcodes.FCONST_0 + (int) value);
+        if (Float.compare(value, 0) == 0) {
+            visitor.visitInsn(Opcodes.FCONST_0);
+            return;
+        }
+        if (Float.compare(value, 1) == 0) {
+            visitor.visitInsn(Opcodes.FCONST_1);
+            return;
+        }
+        if (Float.compare(value, 2) == 0) {
+            visitor.visitInsn(Opcodes.FCONST_2);
             return;
         }
         visitor.visitLdcInsn(value);
@@ -233,8 +241,12 @@ public final class AsmUtil {
      * @param value   double value
      */
     public static void pushDouble(MethodVisitor visitor, double value) {
-        if (value > -1 && value < 2) {
-            visitor.visitInsn(Opcodes.DCONST_0 + (int) value);
+        if (Double.compare(value, 0) == 0) {
+            visitor.visitInsn(Opcodes.DCONST_0);
+            return;
+        }
+        if (Double.compare(value, 1) == 0) {
+            visitor.visitInsn(Opcodes.DCONST_1);
             return;
         }
         visitor.visitLdcInsn(value);
