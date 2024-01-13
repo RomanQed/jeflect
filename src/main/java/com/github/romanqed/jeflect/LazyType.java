@@ -65,8 +65,8 @@ public final class LazyType implements Type {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LazyType)) return false;
-        var lazyType = (LazyType) o;
-        return className.equals(lazyType.className);
+        var type = (LazyType) o;
+        return className.equals(type.className);
     }
 
     @Override

@@ -1,14 +1,11 @@
 package com.github.romanqed.jeflect;
 
-import com.github.romanqed.jeflect.lambdas.LambdaFactory;
-import com.github.romanqed.jeflect.meta.MetaFactory;
 import com.github.romanqed.jfunc.Exceptions;
 
 import java.lang.annotation.Annotation;
 
 /**
  * A set of utilities for interacting with reflection.
- * Contains static instances of the {@link MetaFactory} and {@link LambdaFactory}.
  */
 public final class JeflectUtil {
     private JeflectUtil() {
