@@ -19,6 +19,9 @@ public final class AsmUtil {
     public static final Map<Type, Type> PRIMITIVES = getPrimitives();
     public static final Map<Type, String> PRIMITIVE_METHODS = getPrimitiveMethods();
 
+    private AsmUtil() {
+    }
+
     private static Map<Type, Type> getPrimitives() {
         return Map.of(
                 Type.BOOLEAN_TYPE, Type.getType(Boolean.class),

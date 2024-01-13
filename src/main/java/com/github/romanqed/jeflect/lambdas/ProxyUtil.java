@@ -18,6 +18,9 @@ final class ProxyUtil {
             () -> LAMBDA.getDeclaredMethod("invoke", Object.class, Object[].class)
     );
 
+    private ProxyUtil() {
+    }
+
     static byte[] createProxy(String name,
                               Class<?>[] parameters,
                               Consumer<MethodVisitor> loader,

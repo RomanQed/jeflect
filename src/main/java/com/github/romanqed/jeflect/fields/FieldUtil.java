@@ -22,6 +22,9 @@ final class FieldUtil {
             () -> ACCESSOR.getDeclaredMethod("set", Object.class)
     );
 
+    private FieldUtil() {
+    }
+
     static void createGet(MethodVisitor visitor, Type owner, String name, Type type, boolean isStatic) {
         // Open method
         visitor.visitCode();
