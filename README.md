@@ -32,7 +32,7 @@ dependencies {
 <dependency>
     <groupId>com.github.romanqed</groupId>
     <artifactId>jeflect</artifactId>
-    <version>LATEST</version>
+    <version>1.0.0L</version>
 </dependency>
 ```
 
