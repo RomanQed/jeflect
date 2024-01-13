@@ -41,24 +41,15 @@ public final class Variable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, type);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        var variable = (Variable) o;
+        return name.equals(variable.name) && type.equals(variable.type);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Variable)) {
-            return false;
-        }
-        Variable variable;
-        try {
-            variable = (Variable) o;
-        } catch (Exception e) {
-            return false;
-        }
-        return Objects.equals(name, variable.name) && Objects.equals(type, variable.type);
+    public int hashCode() {
+        return Objects.hash(name, type);
     }
 }

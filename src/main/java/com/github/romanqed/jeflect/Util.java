@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class Util {
+    private Util() {
+    }
+
     static Map<String, Class<?>> getPrimitives() {
         var ret = new HashMap<String, Class<?>>();
         ret.put("void", void.class);

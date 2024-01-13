@@ -9,11 +9,9 @@ import java.util.stream.Collectors;
  * A class representing a class or interface loaded from bytecode.
  */
 public abstract class ByteClass extends AbstractMember {
-    private final Package classPackage;
     private final List<LazyType> interfaces;
     private final LazyType type;
     private final LazyType superType;
-
 
     protected ByteClass(String superType,
                         String[] interfaces,
@@ -30,15 +28,6 @@ public abstract class ByteClass extends AbstractMember {
                     .map(LazyType::new)
                     .collect(Collectors.toUnmodifiableList());
         }
-        this.classPackage = extractPackage(name);
-    }
-
-    private Package extractPackage(String name) {
-        var index = name.replace('/', '.').lastIndexOf('.');
-        if (index < 0) {
-            return null;
-        }
-        return getClass().getClassLoader().getDefinedPackage(name);
     }
 
     /**
@@ -105,13 +94,6 @@ public abstract class ByteClass extends AbstractMember {
      */
     public LazyType getType() {
         return type;
-    }
-
-    /**
-     * @return {@link Package} instance containing info about package of this class, or null
-     */
-    public Package getPackage() {
-        return classPackage;
     }
 
     /**
