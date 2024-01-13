@@ -1,10 +1,11 @@
 package com.github.romanqed.jeflect;
 
-import org.objectweb.asm.*;
-import org.objectweb.asm.commons.LocalVariablesSorter;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * A utility class containing some methods for the ASM library.
@@ -105,46 +106,6 @@ public final class AsmUtil {
         visitor.visitTypeInsn(Opcodes.NEW, typeName);
         visitor.visitInsn(Opcodes.DUP);
         visitor.visitMethodInsn(Opcodes.INVOKESPECIAL, typeName, INIT, EMPTY_DESCRIPTOR, false);
-    }
-
-    /**
-     * Creates a synchronized block on the stack
-     *
-     * @param visitor visitor containing the incomplete code of the method
-     * @param body    The code generator to be executed inside the synchronized block
-     */
-    public static void synchronizedCall(LocalVariablesSorter visitor, Consumer<LocalVariablesSorter> body) {
-        // Body labels
-        var startLabel = new Label();
-        var endLabel = new Label();
-        // Handle labels
-        var handleLabel = new Label();
-        var throwLabel = new Label();
-        // try-catches
-        visitor.visitTryCatchBlock(startLabel, endLabel, handleLabel, null);
-        visitor.visitTryCatchBlock(handleLabel, throwLabel, handleLabel, null);
-        // Save lock to variable
-        var varIndex = visitor.newLocal(OBJECT);
-        visitor.visitInsn(Opcodes.DUP);
-        visitor.visitVarInsn(Opcodes.ASTORE, varIndex);
-        // Enter
-        visitor.visitInsn(Opcodes.MONITORENTER);
-        visitor.visitLabel(startLabel);
-        // Generate body
-        body.accept(visitor);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex);
-        visitor.visitInsn(Opcodes.MONITOREXIT);
-        visitor.visitLabel(endLabel);
-        var gotoLabel = new Label();
-        visitor.visitJumpInsn(Opcodes.GOTO, gotoLabel);
-        visitor.visitLabel(handleLabel);
-        visitor.visitVarInsn(Opcodes.ASTORE, varIndex + 1);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex);
-        visitor.visitInsn(Opcodes.MONITOREXIT);
-        visitor.visitLabel(throwLabel);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex + 1);
-        visitor.visitInsn(Opcodes.ATHROW);
-        visitor.visitLabel(gotoLabel);
     }
 
     /**

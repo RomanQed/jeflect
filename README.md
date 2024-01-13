@@ -1,4 +1,4 @@
-# jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/)
+# jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect/1.0.0L?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/1.0.0L)
 
 A set of utilities designed to interact with reflection and speed up it.
 
@@ -12,8 +12,6 @@ To install it, you will need:
 ### Features
 
 * Getting values from annotations by name
-* Parsing bytecode classes
-* Transforming loaded classes
 * Packaging methods using a universal proxy lambdas
 * Packaging methods with meta-lambdas
 * Packaging fields with proxy accessor
@@ -24,7 +22,7 @@ To install it, you will need:
 
 ```Groovy
 dependencies {
-    implementation group: 'com.github.romanqed', name: 'jeflect', version: 'LATEST'
+    implementation group: 'com.github.romanqed', name: 'jeflect', version: '1.0.0L'
 }
 ```
 
@@ -48,7 +46,7 @@ package com.github.romanqed.jeflect;
 import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
 
 public class Main {
-    public static final String README = "ярусский ^_^";
+    public static final String README = "README";
 
     public static void main(String[] args) throws Exception {
         // So, we need to access field by name
