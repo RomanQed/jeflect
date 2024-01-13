@@ -48,7 +48,7 @@ package com.github.romanqed.jeflect;
 import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
 
 public class Main {
-    public static final String README = "ярусский ^_^";
+    public static final String README = "README";
 
     public static void main(String[] args) throws Exception {
         // So, we need to access field by name
