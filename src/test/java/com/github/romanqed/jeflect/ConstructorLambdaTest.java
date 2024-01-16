@@ -4,7 +4,7 @@ import com.github.romanqed.jeflect.lambdas.LambdaFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ConstructorLambdaTest extends Assertions {
+public final class ConstructorLambdaTest extends Assertions {
     private static final LambdaFactory FACTORY = new LambdaFactory();
 
     @Test

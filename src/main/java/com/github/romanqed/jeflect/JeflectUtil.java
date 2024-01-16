@@ -29,6 +29,7 @@ public final class JeflectUtil {
     public static <T> T extractAnnotationValue(Annotation annotation, String value) {
         var annotationType = annotation.annotationType();
         var found = Exceptions.suppress(() -> annotationType.getDeclaredMethod(value));
+        found.setAccessible(true);
         try {
             return (T) found.invoke(annotation);
         } catch (Exception e) {
@@ -57,6 +58,7 @@ public final class JeflectUtil {
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> T[] getEnumValues(Class<T> clazz) {
         var method = Exceptions.suppress(() -> clazz.getDeclaredMethod("values"));
+        method.setAccessible(true);
         return (T[]) Exceptions.suppress(() -> method.invoke(null));
     }
 

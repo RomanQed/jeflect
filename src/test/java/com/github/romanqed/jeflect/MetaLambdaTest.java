@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandles;
 
-public class MetaLambdaTest extends Assertions {
+public final class MetaLambdaTest extends Assertions {
     static final int S = 0;
     static final int V = 1;
     static final MetaFactory FACTORY = new MetaFactory(MethodHandles.lookup());
