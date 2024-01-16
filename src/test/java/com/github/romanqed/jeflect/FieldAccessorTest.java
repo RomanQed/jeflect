@@ -4,7 +4,7 @@ import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class FieldAccessorTest extends Assertions {
+public final class FieldAccessorTest extends Assertions {
     private static final FieldAccessorFactory FACTORY = new FieldAccessorFactory();
 
     @Test

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class MethodLambdaTest extends Assertions {
+public final class MethodLambdaTest extends Assertions {
     // Interface codes
     static final int I_S = 1;
     static final int I_DV = 2;

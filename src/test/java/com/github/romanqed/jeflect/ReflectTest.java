@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-public class ReflectTest extends Assertions {
+public final class ReflectTest extends Assertions {
     private static final ClassFileParser PARSER = new AsmClassFileParser();
 
     private static byte[] getByteCode(Class<?> clazz) {
