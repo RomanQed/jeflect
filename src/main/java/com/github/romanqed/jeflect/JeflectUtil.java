@@ -79,14 +79,14 @@ public final class JeflectUtil {
      * @param clazz    enum class
      * @param function map function
      * @param <T>      enum type
-     * @param <V>      value type
-     * @return map contains enum-value pairs
+     * @param <V>      key type
+     * @return map contains value-enum pairs
      */
-    public static <T extends Enum<T>, V> Map<T, V> enumToMap(Class<T> clazz, Function<T, V> function) {
+    public static <T extends Enum<T>, V> Map<V, T> enumToMap(Class<T> clazz, Function<T, V> function) {
         var values = getEnumValues(clazz);
-        var ret = new HashMap<T, V>();
+        var ret = new HashMap<V, T>();
         for (var value : values) {
-            ret.put(value, function.apply(value));
+            ret.put(function.apply(value), value);
         }
         return ret;
     }
