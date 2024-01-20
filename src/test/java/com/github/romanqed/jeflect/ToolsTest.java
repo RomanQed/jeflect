@@ -27,9 +27,9 @@ public final class ToolsTest extends Assertions {
     public void testExtractionFromEnum() {
         var map = JeflectUtil.enumToMap(TestEnum.class, TestEnum::getValue);
         assertAll(
-                () -> assertEquals(1, map.get(TestEnum.VALUE1)),
-                () -> assertEquals(2, map.get(TestEnum.VALUE2)),
-                () -> assertEquals(3, map.get(TestEnum.VALUE3))
+                () -> assertEquals(TestEnum.VALUE1, map.get(1)),
+                () -> assertEquals(TestEnum.VALUE2, map.get(2)),
+                () -> assertEquals(TestEnum.VALUE3, map.get(3))
         );
     }
 
