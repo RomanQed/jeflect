@@ -1,10 +1,14 @@
 package com.github.romanqed.jeflect;
 
-import org.objectweb.asm.*;
-import org.objectweb.asm.commons.LocalVariablesSorter;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * A utility class containing some methods for the ASM library.
@@ -99,59 +103,7 @@ public final class AsmUtil {
     }
 
     /**
-     * Creates a new object of the specified type on the stack
-     *
-     * @param visitor  visitor containing the incomplete code of the method
-     * @param typeName name of the required type
-     */
-    public static void newObject(MethodVisitor visitor, String typeName) {
-        visitor.visitTypeInsn(Opcodes.NEW, typeName);
-        visitor.visitInsn(Opcodes.DUP);
-        visitor.visitMethodInsn(Opcodes.INVOKESPECIAL, typeName, INIT, EMPTY_DESCRIPTOR, false);
-    }
-
-    /**
-     * Creates a synchronized block on the stack
-     *
-     * @param visitor visitor containing the incomplete code of the method
-     * @param body    The code generator to be executed inside the synchronized block
-     */
-    public static void synchronizedCall(LocalVariablesSorter visitor, Consumer<LocalVariablesSorter> body) {
-        // Body labels
-        var startLabel = new Label();
-        var endLabel = new Label();
-        // Handle labels
-        var handleLabel = new Label();
-        var throwLabel = new Label();
-        // try-catches
-        visitor.visitTryCatchBlock(startLabel, endLabel, handleLabel, null);
-        visitor.visitTryCatchBlock(handleLabel, throwLabel, handleLabel, null);
-        // Save lock to variable
-        var varIndex = visitor.newLocal(OBJECT);
-        visitor.visitInsn(Opcodes.DUP);
-        visitor.visitVarInsn(Opcodes.ASTORE, varIndex);
-        // Enter
-        visitor.visitInsn(Opcodes.MONITORENTER);
-        visitor.visitLabel(startLabel);
-        // Generate body
-        body.accept(visitor);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex);
-        visitor.visitInsn(Opcodes.MONITOREXIT);
-        visitor.visitLabel(endLabel);
-        var gotoLabel = new Label();
-        visitor.visitJumpInsn(Opcodes.GOTO, gotoLabel);
-        visitor.visitLabel(handleLabel);
-        visitor.visitVarInsn(Opcodes.ASTORE, varIndex + 1);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex);
-        visitor.visitInsn(Opcodes.MONITOREXIT);
-        visitor.visitLabel(throwLabel);
-        visitor.visitVarInsn(Opcodes.ALOAD, varIndex + 1);
-        visitor.visitInsn(Opcodes.ATHROW);
-        visitor.visitLabel(gotoLabel);
-    }
-
-    /**
-     * Creates an empty constructor
+     * Creates an empty constructor that calls the parent constructor.
      *
      * @param writer     {@link ClassWriter} containing the class in which the constructor will be created
      * @param superClass class parent
@@ -171,7 +123,7 @@ public final class AsmUtil {
     }
 
     /**
-     * Creates an empty constructor
+     * Creates an empty constructor that calls the parent constructor.
      *
      * @param writer {@link ClassWriter} containing the class in which the constructor will be created
      */
@@ -288,5 +240,44 @@ public final class AsmUtil {
             return;
         }
         visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Performs a correct call of the passed method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param method  the method that will be called
+     */
+    public static void invoke(MethodVisitor visitor, Method method) {
+        var owner = method.getDeclaringClass();
+        var isInterface = owner.isInterface();
+        var opcode = Modifier.isStatic(method.getModifiers()) ?
+                Opcodes.INVOKESTATIC
+                : (isInterface ?
+                Opcodes.INVOKEINTERFACE
+                : Opcodes.INVOKEVIRTUAL);
+        visitor.visitMethodInsn(
+                opcode,
+                Type.getInternalName(owner),
+                method.getName(),
+                Type.getMethodDescriptor(method),
+                isInterface
+        );
+    }
+
+    /**
+     * Performs a correct call of the passed constructor.
+     *
+     * @param visitor     visitor containing the incomplete code of the method
+     * @param constructor the constructor that will be called
+     */
+    public static void invoke(MethodVisitor visitor, Constructor<?> constructor) {
+        visitor.visitMethodInsn(
+                Opcodes.INVOKESPECIAL,
+                Type.getInternalName(constructor.getDeclaringClass()),
+                INIT,
+                Type.getConstructorDescriptor(constructor),
+                false
+        );
     }
 }

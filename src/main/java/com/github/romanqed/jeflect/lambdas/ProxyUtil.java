@@ -80,7 +80,7 @@ final class ProxyUtil {
     static byte[] createProxy(String name, Method method) {
         var isStatic = Modifier.isStatic(method.getModifiers());
         var owner = Type.getType(method.getDeclaringClass());
-        Consumer<MethodVisitor> loader = visitor -> {
+        var loader = (Consumer<MethodVisitor>) visitor -> {
             if (!isStatic) {
                 // Load object
                 visitor.visitVarInsn(Opcodes.ALOAD, 1);
@@ -88,17 +88,9 @@ final class ProxyUtil {
                 visitor.visitTypeInsn(Opcodes.CHECKCAST, owner.getInternalName());
             }
         };
-        Consumer<MethodVisitor> invoker = visitor -> {
-            boolean isInterface = method.getDeclaringClass().isInterface();
-            // Select opcode to invoke method
-            var opcode = isStatic ? Opcodes.INVOKESTATIC :
-                    (isInterface ? Opcodes.INVOKEINTERFACE : Opcodes.INVOKEVIRTUAL);
+        var invoker = (Consumer<MethodVisitor>) visitor -> {
             // Invoke target method
-            visitor.visitMethodInsn(opcode,
-                    owner.getInternalName(),
-                    method.getName(),
-                    Type.getType(method).getDescriptor(),
-                    isInterface);
+            AsmUtil.invoke(visitor, method);
             // Wrap return value if it necessary
             var type = method.getReturnType();
             if (type == void.class) {
@@ -112,12 +104,12 @@ final class ProxyUtil {
 
     static byte[] createProxy(String name, Constructor<?> constructor) {
         var owner = Type.getType(constructor.getDeclaringClass());
-        Consumer<MethodVisitor> loader = visitor -> {
+        var loader = (Consumer<MethodVisitor>) visitor -> {
             // Create object
             visitor.visitTypeInsn(Opcodes.NEW, owner.getInternalName());
             visitor.visitInsn(Opcodes.DUP);
         };
-        Consumer<MethodVisitor> invoker = visitor -> {
+        var invoker = (Consumer<MethodVisitor>) visitor -> {
             // Invoke target constructor
             visitor.visitMethodInsn(
                     Opcodes.INVOKESPECIAL,
