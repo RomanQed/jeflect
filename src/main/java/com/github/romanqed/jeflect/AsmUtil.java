@@ -5,6 +5,9 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -92,27 +95,17 @@ public final class AsmUtil {
             return;
         }
         var descriptor = Type.getMethodDescriptor(wrap, primitive);
-        visitor.visitMethodInsn(Opcodes.INVOKESTATIC,
+        visitor.visitMethodInsn(
+                Opcodes.INVOKESTATIC,
                 wrap.getInternalName(),
                 "valueOf",
                 descriptor,
-                false);
+                false
+        );
     }
 
     /**
-     * Creates a new object of the specified type on the stack
-     *
-     * @param visitor  visitor containing the incomplete code of the method
-     * @param typeName name of the required type
-     */
-    public static void newObject(MethodVisitor visitor, String typeName) {
-        visitor.visitTypeInsn(Opcodes.NEW, typeName);
-        visitor.visitInsn(Opcodes.DUP);
-        visitor.visitMethodInsn(Opcodes.INVOKESPECIAL, typeName, INIT, EMPTY_DESCRIPTOR, false);
-    }
-
-    /**
-     * Creates an empty constructor
+     * Creates an empty constructor that calls the parent constructor.
      *
      * @param writer     {@link ClassWriter} containing the class in which the constructor will be created
      * @param superClass class parent
@@ -132,7 +125,7 @@ public final class AsmUtil {
     }
 
     /**
-     * Creates an empty constructor
+     * Creates an empty constructor that calls the parent constructor.
      *
      * @param writer {@link ClassWriter} containing the class in which the constructor will be created
      */
@@ -249,5 +242,44 @@ public final class AsmUtil {
             return;
         }
         visitor.visitLdcInsn(value);
+    }
+
+    /**
+     * Performs a correct call of the passed method.
+     *
+     * @param visitor visitor containing the incomplete code of the method
+     * @param method  the method that will be called
+     */
+    public static void invoke(MethodVisitor visitor, Method method) {
+        var owner = method.getDeclaringClass();
+        var isInterface = owner.isInterface();
+        var opcode = Modifier.isStatic(method.getModifiers()) ?
+                Opcodes.INVOKESTATIC
+                : (isInterface ?
+                Opcodes.INVOKEINTERFACE
+                : Opcodes.INVOKEVIRTUAL);
+        visitor.visitMethodInsn(
+                opcode,
+                Type.getInternalName(owner),
+                method.getName(),
+                Type.getMethodDescriptor(method),
+                isInterface
+        );
+    }
+
+    /**
+     * Performs a correct call of the passed constructor.
+     *
+     * @param visitor     visitor containing the incomplete code of the method
+     * @param constructor the constructor that will be called
+     */
+    public static void invoke(MethodVisitor visitor, Constructor<?> constructor) {
+        visitor.visitMethodInsn(
+                Opcodes.INVOKESPECIAL,
+                Type.getInternalName(constructor.getDeclaringClass()),
+                INIT,
+                Type.getConstructorDescriptor(constructor),
+                false
+        );
     }
 }
