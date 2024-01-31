@@ -25,6 +25,8 @@ public final class DefineObjectFactory<T> implements ObjectFactory<T> {
                 clazz = this.loader.define(name, bytes);
             }
             return creator.invoke(clazz);
+        } catch (Error | RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
