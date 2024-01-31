@@ -41,6 +41,8 @@ public final class MetaFactory {
             Objects.requireNonNull(method);
             var handle = lookup.unreflect(method);
             return handle.type();
+        } catch (Error | RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -89,6 +91,8 @@ public final class MetaFactory {
             );
             var ret = bind == null ? callSite.getTarget() : callSite.getTarget().bindTo(bind);
             return (T) ret.invoke();
+        } catch (Error | RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -110,6 +114,8 @@ public final class MetaFactory {
         try {
             var handle = lookup.unreflect(method);
             return packLambdaHandle(clazz, handle, bind);
+        } catch (Error | RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -129,6 +135,8 @@ public final class MetaFactory {
         try {
             var handle = lookup.unreflectConstructor(constructor);
             return packLambdaHandle(clazz, handle, null);
+        } catch (Error | RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
