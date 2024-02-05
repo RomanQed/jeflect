@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.2'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.1'
     api group: 'org.ow2.asm', name: 'asm', version: '9.6'
     api group: 'com.github.romanqed', name: 'jfunc', version: '1.0.0'
