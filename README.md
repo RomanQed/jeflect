@@ -1,4 +1,4 @@
-# jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect/1.1.1L?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/1.1.1L)
+# jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect/1.1.2L?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/1.1.2L)
 
 A set of utilities designed to interact with reflection and speed up it.
 
@@ -22,7 +22,7 @@ To install it, you will need:
 
 ```Groovy
 dependencies {
-    implementation group: 'com.github.romanqed', name: 'jeflect', version: '1.1.1L'
+    implementation group: 'com.github.romanqed', name: 'jeflect', version: '1.1.2L'
 }
 ```
 
@@ -32,7 +32,7 @@ dependencies {
 <dependency>
     <groupId>com.github.romanqed</groupId>
     <artifactId>jeflect</artifactId>
-    <version>1.1.1L</version>
+    <version>1.1.2L</version>
 </dependency>
 ```
 
