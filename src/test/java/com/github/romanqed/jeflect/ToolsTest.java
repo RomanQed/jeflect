@@ -1,12 +1,14 @@
 package com.github.romanqed.jeflect;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public final class ToolsTest extends Assertions {
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public final class ToolsTest {
     @Test
     public void testExtractionFromAnnotation() throws Exception {
         var clazz = TestClass.class;

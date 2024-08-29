@@ -1,2 +1,6 @@
 rootProject.name = 'jeflect'
-
+include 'loader'
+include 'meta'
+include 'lambda'
+include 'field'
+include 'transform'

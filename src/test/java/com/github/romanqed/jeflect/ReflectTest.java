@@ -2,7 +2,6 @@ package com.github.romanqed.jeflect;
 
 import com.github.romanqed.jeflect.parsers.AsmClassFileParser;
 import com.github.romanqed.jeflect.parsers.ClassFileParser;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Type;
 
@@ -12,7 +11,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-public final class ReflectTest extends Assertions {
+import static org.junit.jupiter.api.Assertions.*;
+
+public final class ReflectTest {
     private static final ClassFileParser PARSER = new AsmClassFileParser();
 
     private static byte[] getByteCode(Class<?> clazz) {
