@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 public final class ConstructorLambdaTest {
-    private static final LambdaFactory FACTORY = new LambdaFactory();
+    private static final LambdaFactory FACTORY = new BytecodeLambdaFactory();
 
     @Test
     public void testEmptyConstructor() throws Throwable {

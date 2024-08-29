@@ -7,11 +7,11 @@ import java.lang.invoke.MethodHandles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class MetaLambdaTest {
-    static final int S = 0;
-    static final int V = 1;
-    static final MetaFactory FACTORY = new MetaFactory(MethodHandles.lookup());
+    static final MetaLambdaFactory FACTORY = new LookupMetaFactory(MethodHandles.lookup());
     static final LambdaType<Caller> CALLER = LambdaType.of(Caller.class);
     static final LambdaType<FreeCaller> FREE_CALLER = LambdaType.of(FreeCaller.class);
+    static final int S = 0;
+    static final int V = 1;
 
     @Test
     public void testStatic() throws Throwable {

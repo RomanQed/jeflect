@@ -21,7 +21,7 @@ public final class MethodLambdaTest {
     static final int AC_V = 8;
     static final int AC_VF = 9;
     static final int AC_VA = 10;
-    private static final LambdaFactory FACTORY = new LambdaFactory();
+    private static final LambdaFactory FACTORY = new BytecodeLambdaFactory();
 
     @Test
     public void testInterface() throws Throwable {

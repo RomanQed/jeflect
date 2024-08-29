@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public final class FieldAccessorTest {
-    private static final FieldAccessorFactory FACTORY = new FieldAccessorFactory();
+    private static final FieldAccessorFactory FACTORY = new BytecodeAccessorFactory();
 
     @Test
     public void testPrimitives() throws Exception {

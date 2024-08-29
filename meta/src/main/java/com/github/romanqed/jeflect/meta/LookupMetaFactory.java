@@ -9,16 +9,17 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
- * A class describing a factory that packages methods with a pre-known signature into lambda interfaces.
+ * Meta factory that packages methods with a pre-known signature into lambda interfaces with
+ * using built-in {@link java.lang.invoke.MethodHandles.Lookup}.
  */
-public final class MetaFactory {
+public final class LookupMetaFactory implements MetaLambdaFactory {
     private final MethodHandles.Lookup lookup;
 
-    public MetaFactory(MethodHandles.Lookup lookup) {
+    public LookupMetaFactory(MethodHandles.Lookup lookup) {
         this.lookup = Objects.requireNonNull(lookup);
     }
 
-    public MetaFactory() {
+    public LookupMetaFactory() {
         this.lookup = MethodHandles.lookup();
     }
 
@@ -98,17 +99,7 @@ public final class MetaFactory {
         }
     }
 
-    /**
-     * Automatically unreflects and packages {@link Method} into the passed {@link LambdaType}.
-     *
-     * @param clazz  lambda class for packaging
-     * @param method method for packaging
-     * @param bind   instance of the object to which the packaged method will be bound
-     *               (if null, the method will be considered static)
-     * @param <T>    type of packing lambda
-     * @return the object instantiating the passed lambda
-     * @throws RuntimeException if any errors occurred during the packaging process
-     */
+    @Override
     public <T> T packLambdaMethod(LambdaType<T> clazz, Method method, Object bind) {
         Objects.requireNonNull(method);
         try {
@@ -121,15 +112,7 @@ public final class MetaFactory {
         }
     }
 
-    /**
-     * Automatically unreflects and packages {@link Constructor} into the passed {@link LambdaType}.
-     *
-     * @param clazz       lambda class for packaging
-     * @param constructor constructor for packaging
-     * @param <T>         type of packing lambda
-     * @return the object instantiating the passed lambda
-     * @throws RuntimeException if any errors occurred during the packaging process
-     */
+    @Override
     public <T> T packLambdaConstructor(LambdaType<T> clazz, Constructor<?> constructor) {
         Objects.requireNonNull(constructor);
         try {
@@ -142,14 +125,7 @@ public final class MetaFactory {
         }
     }
 
-    /**
-     * Automatically unreflects and packages static {@link Method} into the passed {@link LambdaType}.
-     *
-     * @param clazz  lambda class for packaging
-     * @param method method for packaging
-     * @param <T>    type of packing lambda
-     * @return the object instantiating the passed lambda
-     */
+    @Override
     public <T> T packLambdaMethod(LambdaType<T> clazz, Method method) {
         return packLambdaMethod(clazz, method, null);
     }

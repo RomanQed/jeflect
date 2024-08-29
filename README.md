@@ -1,4 +1,4 @@
-# jeflect [![maven-central](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/)
+# jeflect [![jeflect](https://img.shields.io/maven-central/v/com.github.romanqed/jeflect?color=blue)](https://repo1.maven.org/maven2/com/github/romanqed/jeflect/)
 
 A set of utilities designed to interact with reflection and speed up it.
 
@@ -24,7 +24,12 @@ To install it, you will need:
 
 ```Groovy
 dependencies {
-    implementation group: 'com.github.romanqed', name: 'jeflect', version: 'LATEST'
+    implementation group: 'com.github.romanqed', name: 'jeflect', version: '5.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-loader', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-field', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-lambda', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-meta', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-transform', version: '1.0.0'
 }
 ```
 
@@ -34,18 +39,41 @@ dependencies {
 <dependency>
     <groupId>com.github.romanqed</groupId>
     <artifactId>jeflect</artifactId>
-    <version>LATEST</version>
+    <version>5.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.romanqed</groupId>
+    <artifactId>jeflect-loader</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.romanqed</groupId>
+    <artifactId>jeflect-field</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.romanqed</groupId>
+    <artifactId>jeflect-lambda</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.romanqed</groupId>
+    <artifactId>jeflect-meta</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.romanqed</groupId>
+    <artifactId>jeflect-transform</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ## Examples
 
-### Field accessor
+### jeflect-field
 
 ```Java
-package com.github.romanqed.jeflect;
-
-import com.github.romanqed.jeflect.fields.FieldAccessorFactory;
+import com.github.romanqed.jeflect.field.BytecodeAccessorFactory;
 
 public class Main {
     public static final String README = "README";
@@ -57,19 +85,17 @@ public class Main {
         // Default, very slow, built-in reflection way
         System.out.println(field.get(null)); // <-- Very bad choice to use it during active calculating
         // A wonderful, ultra-fast, shining way with field accessor
-        var factory = new FieldAccessorFactory();
+        var factory = new BytecodeAccessorFactory();
         var accessor = factory.packField(field); // <-- This action takes a long time, do this only once
         System.out.println(accessor.get()); // <-- This action is performed as fast as a normal field access
     }
 }
 ```
 
-### Lambdas
+### jeflect-lambda
 
 ```Java
-package com.github.romanqed.jeflect;
-
-import com.github.romanqed.jeflect.lambdas.LambdaFactory;
+import com.github.romanqed.jeflect.lambda.BytecodeLambdaFactory;
 
 public class Main {
     public static void main(String[] args) throws Throwable {
@@ -80,7 +106,7 @@ public class Main {
         // Default, very slow, built-in reflection way
         method.invoke(null, params); // <-- Very bad choice to use it during active calculating
         // A wonderful, ultra-fast, shining way with proxy lambdas (not so fast as meta-lambdas, but more universal)
-        var factory = new LambdaFactory();
+        var factory = new BytecodeLambdaFactory();
         var lambda = factory.packMethod(method); // <-- This action takes a long time, do this only once
         lambda.invoke(params); // <-- This action is performed as fast as a normal method call
     }
@@ -91,13 +117,11 @@ public class Main {
 }
 ```
 
-### Meta lambdas
+### jeflect-meta
 
 ```Java
-package com.github.romanqed.jeflect;
-
 import com.github.romanqed.jeflect.meta.LambdaType;
-import com.github.romanqed.jeflect.meta.MetaFactory;
+import com.github.romanqed.jeflect.meta.LookupMetaFactory;
 
 import java.lang.invoke.MethodHandles;
 
@@ -109,8 +133,8 @@ public class Main {
         // Default, very slow, built-in reflection way
         method.invoke(null); // <-- Very bad choice to use it during active calculating
         // A wonderful, ultra-fast, shining way with meta-lambdas
-        var factory = new MetaFactory(MethodHandles.lookup());
-        var type = LambdaType.fromClass(Runnable.class);
+        var factory = new LookupMetaFactory(MethodHandles.lookup());
+        var type = LambdaType.of(Runnable.class);
         var runnable = factory.packLambdaMethod(type, method); // <-- This action takes a long time, do this only once
         runnable.run(); // <-- This action is performed as fast as a normal method call
     }
