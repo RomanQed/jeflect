@@ -16,7 +16,7 @@ java {
 
 group = 'com.github.romanqed'
 archivesBaseName = 'jeflect-loader'
-version = System.getenv('RELEASE_VERSION') ?: '1.0.0'
+version = System.getenv('LOADER_VERSION') ?: '1.0.0'
 
 repositories {
     mavenCentral()

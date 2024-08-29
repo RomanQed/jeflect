@@ -16,7 +16,7 @@ java {
 
 group = 'com.github.romanqed'
 archivesBaseName = 'jeflect-field'
-version = System.getenv('RELEASE_VERSION') ?: '1.0.0'
+version = System.getenv('FIELD_VERSION') ?: '1.0.0'
 
 repositories {
     mavenCentral()
