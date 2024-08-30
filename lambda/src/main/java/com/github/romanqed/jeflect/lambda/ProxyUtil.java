@@ -62,7 +62,7 @@ final class ProxyUtil {
             // Load argument from array
             visitor.visitInsn(Opcodes.AALOAD);
             // Cast argument
-            AsmUtil.castReference(visitor, Type.getType(parameter));
+            AsmUtil.castReference(visitor, parameter);
             ++index;
         }
         // Invoke target method
@@ -96,7 +96,7 @@ final class ProxyUtil {
                 visitor.visitInsn(Opcodes.ACONST_NULL);
                 return;
             }
-            AsmUtil.packPrimitive(visitor, Type.getType(type));
+            AsmUtil.packPrimitive(visitor, type);
         };
         return createProxy(name, method.getParameterTypes(), loader, invoker);
     }
