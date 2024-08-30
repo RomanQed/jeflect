@@ -26,8 +26,8 @@ To install it, you will need:
 dependencies {
     implementation group: 'com.github.romanqed', name: 'jeflect', version: '5.0.0'
     implementation group: 'com.github.romanqed', name: 'jeflect-loader', version: '1.0.0'
-    implementation group: 'com.github.romanqed', name: 'jeflect-field', version: '1.0.0'
-    implementation group: 'com.github.romanqed', name: 'jeflect-lambda', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-field', version: '1.0.1'
+    implementation group: 'com.github.romanqed', name: 'jeflect-lambda', version: '1.0.1'
     implementation group: 'com.github.romanqed', name: 'jeflect-meta', version: '1.0.0'
     implementation group: 'com.github.romanqed', name: 'jeflect-transform', version: '1.0.0'
 }
