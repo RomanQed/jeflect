@@ -24,7 +24,7 @@ final class FieldUtil {
     private FieldUtil() {
     }
 
-    static void createGet(MethodVisitor visitor, Type owner, String name, Type type, boolean isStatic) {
+    static void createGet(MethodVisitor visitor, Type owner, String name, Class<?> type, boolean isStatic) {
         // Open method
         visitor.visitCode();
         if (!isStatic) {
@@ -34,10 +34,12 @@ final class FieldUtil {
             visitor.visitTypeInsn(Opcodes.CHECKCAST, owner.getInternalName());
         }
         // Load field value
-        visitor.visitFieldInsn(isStatic ? Opcodes.GETSTATIC : Opcodes.GETFIELD,
+        visitor.visitFieldInsn(
+                isStatic ? Opcodes.GETSTATIC : Opcodes.GETFIELD,
                 owner.getInternalName(),
                 name,
-                type.getDescriptor());
+                Type.getDescriptor(type)
+        );
         // Pack primitive
         AsmUtil.packPrimitive(visitor, type);
         // Return value
@@ -47,7 +49,7 @@ final class FieldUtil {
         visitor.visitEnd();
     }
 
-    static void createSet(MethodVisitor visitor, Type owner, String name, Type type, boolean isStatic) {
+    static void createSet(MethodVisitor visitor, Type owner, String name, Class<?> type, boolean isStatic) {
         // Open method
         visitor.visitCode();
         var index = 1;
@@ -62,10 +64,12 @@ final class FieldUtil {
         // Cast value
         AsmUtil.castReference(visitor, type);
         // Set value to field
-        visitor.visitFieldInsn(isStatic ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD,
+        visitor.visitFieldInsn(
+                isStatic ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD,
                 owner.getInternalName(),
                 name,
-                type.getDescriptor());
+                Type.getDescriptor(type)
+        );
         // Return
         visitor.visitInsn(Opcodes.RETURN);
         // Close method
@@ -76,26 +80,30 @@ final class FieldUtil {
     static byte[] createAccessor(String name, Field field) {
         // Create accessor class
         var writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        writer.visit(Opcodes.V11,
+        writer.visit(
+                Opcodes.V11,
                 Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL,
                 name,
                 null,
                 Type.getInternalName(Object.class),
-                new String[]{Type.getInternalName(ACCESSOR)});
+                new String[]{Type.getInternalName(ACCESSOR)}
+        );
         // Create empty constructor
         AsmUtil.createEmptyConstructor(writer);
         var modifiers = field.getModifiers();
         var isStatic = Modifier.isStatic(modifiers);
         // Prepare data
         var owner = Type.getType(field.getDeclaringClass());
-        var type = Type.getType(field.getType());
+        var type = field.getType();
         // Implement get method
         var getMethod = isStatic ? STATIC_GET : GET;
-        var get = writer.visitMethod(Opcodes.ACC_PUBLIC,
+        var get = writer.visitMethod(
+                Opcodes.ACC_PUBLIC,
                 getMethod.getName(),
                 Type.getMethodDescriptor(getMethod),
                 null,
-                null);
+                null
+        );
         createGet(get, owner, field.getName(), type, isStatic);
         // Check if field is final
         if (Modifier.isFinal(modifiers)) {
@@ -105,11 +113,13 @@ final class FieldUtil {
         }
         // Implement set method
         var setMethod = isStatic ? STATIC_SET : SET;
-        var set = writer.visitMethod(Opcodes.ACC_PUBLIC,
+        var set = writer.visitMethod(
+                Opcodes.ACC_PUBLIC,
                 setMethod.getName(),
                 Type.getMethodDescriptor(setMethod),
                 null,
-                null);
+                null
+        );
         createSet(set, owner, field.getName(), type, isStatic);
         // Close writer
         writer.visitEnd();
