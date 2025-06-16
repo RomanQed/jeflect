@@ -71,8 +71,8 @@ publishing {
             from components.java
             // Configure pom
             pom {
-                name.set('jeflect-field')
-                description.set('The factory of dynamic field accessors.')
+                name.set(archivesBaseName)
+                description.set('The cloner for reflect members.')
                 url.set('https://github.com/RomanQed/jeflect')
                 organization {
                     name.set('com.github.romanqed')
