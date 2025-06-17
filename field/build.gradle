@@ -75,7 +75,7 @@ publishing {
             from components.java
             // Configure pom
             pom {
-                name.set('jeflect-field')
+                name.set(archivesBaseName)
                 description.set('The factory of dynamic field accessors.')
                 url.set('https://github.com/RomanQed/jeflect')
                 organization {
@@ -104,16 +104,6 @@ publishing {
                         email.set('gbakaldin@gmail.com')
                     }
                 }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            credentials {
-                username System.getenv('SONATYPE_USERNAME')
-                password System.getenv('SONATYPE_PASSWORD')
             }
         }
     }
