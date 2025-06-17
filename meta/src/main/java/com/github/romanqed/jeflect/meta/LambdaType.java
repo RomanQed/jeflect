@@ -3,7 +3,6 @@ package com.github.romanqed.jeflect.meta;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -12,12 +11,12 @@ import java.util.stream.Collectors;
  * @param <T> the type corresponding to the lambda type
  */
 public final class LambdaType<T> {
-    private final Class<T> lambdaType;
-    private final Method lambdaMethod;
+    private final Class<T> type;
+    private final Method method;
 
     private LambdaType(Class<T> type, Method method) {
-        this.lambdaType = type;
-        this.lambdaMethod = method;
+        this.type = type;
+        this.method = method;
     }
 
     /**
@@ -28,7 +27,6 @@ public final class LambdaType<T> {
      * @return instance of {@link LambdaType}
      */
     public static <T> LambdaType<T> of(Class<T> type) {
-        Objects.requireNonNull(type);
         if (!type.isInterface()) {
             throw new IllegalArgumentException("Invalid lambda class");
         }
@@ -46,34 +44,33 @@ public final class LambdaType<T> {
      * @return java class object, contains lambda type
      */
     public Class<T> getLambdaType() {
-        return lambdaType;
+        return type;
     }
 
     /**
      * @return java method object, contains lambda method
      */
     public Method getLambdaMethod() {
-        return lambdaMethod;
+        return method;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        var that = (LambdaType<?>) object;
+
+        return type.equals(that.type);
     }
 
     @Override
     public int hashCode() {
-        return lambdaType.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof LambdaType)) {
-            return false;
-        }
-        return lambdaType.equals(((LambdaType<?>) obj).lambdaType);
+        return type.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Lambda " + lambdaType.getSimpleName() + " with method " + lambdaMethod.getName();
+        return "Lambda " + type.getSimpleName() + " with method " + method.getName();
     }
 }

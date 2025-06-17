@@ -4,3 +4,5 @@ include 'meta'
 include 'lambda'
 include 'field'
 include 'transform'
+include 'cloner'
+
