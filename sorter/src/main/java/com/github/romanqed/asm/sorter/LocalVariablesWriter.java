@@ -25,7 +25,7 @@ import org.objectweb.asm.ClassWriter;
  *     );
  *     // You can now call mv.newLocal(...) to allocate new local variables.
  * </pre>
- * </p>
+ * <p>
  *
  * @see LocalVariablesSorter
  * @see org.objectweb.asm.MethodVisitor
