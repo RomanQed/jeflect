@@ -25,7 +25,7 @@ To install it, you will need:
 ```Groovy
 dependencies {
     implementation group: 'com.github.romanqed', name: 'jeflect', version: '5.0.1'
-    implementation group: 'com.github.romanqed', name: 'jeflect-loader', version: '1.0.0'
+    implementation group: 'com.github.romanqed', name: 'jeflect-loader', version: '1.0.1'
     implementation group: 'com.github.romanqed', name: 'jeflect-field', version: '1.0.2'
     implementation group: 'com.github.romanqed', name: 'jeflect-lambda', version: '1.0.2'
     implementation group: 'com.github.romanqed', name: 'jeflect-meta', version: '1.0.0'
@@ -36,36 +36,38 @@ dependencies {
 ### Maven dependency
 
 ```
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect</artifactId>
-    <version>5.0.1</version>
-</dependency>
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect-loader</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect-field</artifactId>
-    <version>1.0.2</version>
-</dependency>
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect-lambda</artifactId>
-    <version>1.0.2</version>
-</dependency>
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect-meta</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<dependency>
-    <groupId>com.github.romanqed</groupId>
-    <artifactId>jeflect-transform</artifactId>
-    <version>1.0.0</version>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect</artifactId>
+        <version>5.0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect-loader</artifactId>
+        <version>1.0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect-field</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect-lambda</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect-meta</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.romanqed</groupId>
+        <artifactId>jeflect-transform</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
 ```
 
 ## Examples
