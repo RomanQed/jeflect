@@ -12,7 +12,6 @@ import org.objectweb.asm.ClassWriter;
  * local variables to be added, such as during instrumentation or bytecode transformations.
  * </p>
  *
- * <p>
  * Example usage:
  * <pre>
  *     var cw = new LocalVariablesWriter(ClassWriter.COMPUTE_FRAMES);
@@ -25,7 +24,6 @@ import org.objectweb.asm.ClassWriter;
  *     );
  *     // You can now call mv.newLocal(...) to allocate new local variables.
  * </pre>
- * <p>
  *
  * @see LocalVariablesSorter
  * @see org.objectweb.asm.MethodVisitor
