@@ -5,13 +5,30 @@ import com.github.romanqed.jfunc.Function1;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
+/**
+ * An implementation of {@link ObjectFactory} that uses a {@link DefineLoader}
+ * to define and instantiate objects from bytecode at runtime.
+ *
+ * @param <T> the type of objects produced by this factory
+ */
 public final class DefineObjectFactory<T> implements ObjectFactory<T> {
     private final DefineLoader loader;
 
+    /**
+     * Constructs a new factory with the given {@link DefineLoader}.
+     *
+     * @param loader the class loader used to define and load classes
+     * @throws NullPointerException if {@code loader} is {@code null}
+     */
     public DefineObjectFactory(DefineLoader loader) {
         this.loader = Objects.requireNonNull(loader);
     }
 
+    /**
+     * Returns the {@link DefineLoader} used by this factory.
+     *
+     * @return the associated {@link DefineLoader}
+     */
     public DefineLoader getLoader() {
         return loader;
     }
@@ -35,6 +52,8 @@ public final class DefineObjectFactory<T> implements ObjectFactory<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T create(String name, Callable<byte[]> provider) {
-        return create(name, provider, clazz -> (T) clazz.getDeclaredConstructor().newInstance());
+        return create(name, provider, clazz ->
+                (T) clazz.getDeclaredConstructor((Class<?>[]) null).newInstance((Object[]) null)
+        );
     }
 }

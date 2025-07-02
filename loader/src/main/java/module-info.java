@@ -1,4 +1,4 @@
-open module com.github.romanqed.jeflect.loader {
+module com.github.romanqed.jeflect.loader {
     // Imports
     requires com.github.romanqed.jfunc;
     // Exports
