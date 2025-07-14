@@ -53,7 +53,7 @@ public final class DefineObjectFactory<T> implements ObjectFactory<T> {
     @SuppressWarnings("unchecked")
     public T create(String name, Callable<byte[]> provider) {
         return create(name, provider, clazz ->
-                (T) clazz.getDeclaredConstructor((Class<?>[]) null).newInstance((Object[]) null)
+                (T) clazz.getConstructor((Class<?>[]) null).newInstance((Object[]) null)
         );
     }
 }
