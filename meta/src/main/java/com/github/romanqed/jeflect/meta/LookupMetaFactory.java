@@ -30,6 +30,11 @@ public final class LookupMetaFactory implements MetaLambdaFactory {
         return lookup;
     }
 
+    @SuppressWarnings("unchecked")
+    private static <E extends Throwable> void throwAny(Throwable throwable) throws E {
+        throw (E) throwable;
+    }
+
     /**
      * Extracts the type from the passed method.
      *
@@ -42,10 +47,10 @@ public final class LookupMetaFactory implements MetaLambdaFactory {
             Objects.requireNonNull(method);
             var handle = lookup.unreflect(method);
             return handle.type();
-        } catch (Error | RuntimeException e) {
-            throw e;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
         }
     }
 
@@ -92,10 +97,10 @@ public final class LookupMetaFactory implements MetaLambdaFactory {
             );
             var ret = bind == null ? callSite.getTarget() : callSite.getTarget().bindTo(bind);
             return (T) ret.invoke();
-        } catch (Error | RuntimeException e) {
-            throw e;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
         }
     }
 
@@ -105,10 +110,10 @@ public final class LookupMetaFactory implements MetaLambdaFactory {
         try {
             var handle = lookup.unreflect(method);
             return packLambdaHandle(clazz, handle, bind);
-        } catch (Error | RuntimeException e) {
-            throw e;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
         }
     }
 
@@ -118,10 +123,10 @@ public final class LookupMetaFactory implements MetaLambdaFactory {
         try {
             var handle = lookup.unreflectConstructor(constructor);
             return packLambdaHandle(clazz, handle, null);
-        } catch (Error | RuntimeException e) {
-            throw e;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
         }
     }
 
