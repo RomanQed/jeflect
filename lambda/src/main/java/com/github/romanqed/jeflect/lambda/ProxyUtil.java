@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 final class ProxyUtil {
     private static final Class<Lambda> LAMBDA = Lambda.class;
-    private static final Method METHOD = Exceptions.suppress(
+    private static final Method METHOD = Exceptions.silent(
             () -> LAMBDA.getDeclaredMethod("invoke", Object.class, Object[].class)
     );
 

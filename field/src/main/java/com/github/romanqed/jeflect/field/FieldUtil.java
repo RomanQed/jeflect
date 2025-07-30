@@ -12,12 +12,12 @@ import java.lang.reflect.Modifier;
 
 final class FieldUtil {
     private static final Class<FieldAccessor> ACCESSOR = FieldAccessor.class;
-    private static final Method GET = Exceptions.suppress(() -> ACCESSOR.getDeclaredMethod("get", Object.class));
-    private static final Method STATIC_GET = Exceptions.suppress(() -> ACCESSOR.getDeclaredMethod("get"));
-    private static final Method SET = Exceptions.suppress(
+    private static final Method GET = Exceptions.silent(() -> ACCESSOR.getDeclaredMethod("get", Object.class));
+    private static final Method STATIC_GET = Exceptions.silent(() -> ACCESSOR.getDeclaredMethod("get"));
+    private static final Method SET = Exceptions.silent(
             () -> ACCESSOR.getDeclaredMethod("set", Object.class, Object.class)
     );
-    private static final Method STATIC_SET = Exceptions.suppress(
+    private static final Method STATIC_SET = Exceptions.silent(
             () -> ACCESSOR.getDeclaredMethod("set", Object.class)
     );
 
