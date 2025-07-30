@@ -27,7 +27,6 @@ dependencies {
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.2'
     compileOnly project(':loader')
     testRuntimeOnly project(':loader')
-    api group: 'com.github.romanqed', name: 'jfunc', version: '1.1.4'
     implementation group: 'org.ow2.asm', name: 'asm', version: '9.8'
 }
 
