@@ -27,12 +27,14 @@ public final class JeflectUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> T extractAnnotationValue(Annotation annotation, String value) {
-        var annotationType = annotation.annotationType();
-        var found = Exceptions.suppress(() -> annotationType.getDeclaredMethod(value));
-        found.setAccessible(true);
         try {
+            var annotationType = annotation.annotationType();
+            var found = annotationType.getDeclaredMethod(value);
+            found.setAccessible(true);
             return (T) found.invoke(annotation);
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            Exceptions.throwAny(e);
+            // Unreachable code to suppress javac error
             return null;
         }
     }
@@ -57,9 +59,15 @@ public final class JeflectUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> T[] getEnumValues(Class<T> clazz) {
-        var method = Exceptions.suppress(() -> clazz.getDeclaredMethod("values"));
-        method.setAccessible(true);
-        return (T[]) Exceptions.suppress(() -> method.invoke(null));
+        try {
+            var method = clazz.getDeclaredMethod("values");
+            method.setAccessible(true);
+            return (T[]) method.invoke(null);
+        } catch (Throwable e) {
+            Exceptions.throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
+        }
     }
 
     /**
