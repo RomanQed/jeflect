@@ -1,5 +1,6 @@
 package com.github.romanqed.jeflect.loader;
 
+import com.github.romanqed.jfunc.Exceptions;
 import com.github.romanqed.jfunc.Function1;
 
 import java.util.Objects;
@@ -42,10 +43,10 @@ public final class DefineObjectFactory<T> implements ObjectFactory<T> {
                 clazz = this.loader.define(name, bytes);
             }
             return creator.invoke(clazz);
-        } catch (Error | RuntimeException e) {
-            throw e;
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            Exceptions.throwAny(e);
+            // Unreachable code to suppress javac error
+            return null;
         }
     }
 
