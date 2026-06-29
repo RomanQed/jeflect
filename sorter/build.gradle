@@ -23,8 +23,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.2'
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '6.1.1'
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '6.1.1'
     compileOnly group: 'org.ow2.asm', name: 'asm', version: '9.8'
 }
 
